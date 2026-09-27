@@ -1,0 +1,2720 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SHMYO — Öğrenci Öğrenme Platformu</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f5f6fa; --bg2:#eef0f8; --bg3:#e4e8f4;
+  --surface:#ffffff; --surface2:#f0f3fb; --border:#d0d8ee;
+  --navy:#1a2a5e; --navy2:#243570; --navy3:#1e3a8a;
+  --orange:#f97316; --orange2:#ea580c; --orange3:#fff7ed;
+  --accent:#1a2a5e; --accent2:#f97316;
+  --green:#16a34a; --green2:#dcfce7;
+  --red:#dc2626; --red2:#fee2e2;
+  --yellow:#d97706; --yellow2:#fef3c7;
+  --text:#1a1f36; --text2:#4a5568; --text3:#9aa3b8;
+  --mono:'JetBrains Mono',monospace; --sans:'Inter',sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:inherit;margin:0;padding:0;}
+html,body{height:100%;font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15px;line-height:1.5;}
+
+/* SCREENS */
+.screen{display:none;flex-direction:column;min-height:100vh;}
+.screen.active{display:flex;}
+
+/* LANDING */
+.landing{align-items:center;justify-content:center;padding:32px 20px;
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy3) 50%,#1e3a8a 100%);}
+.landing-card{background:#fff;border-radius:24px;padding:44px 40px;width:100%;max-width:480px;
+  text-align:center;box-shadow:0 20px 60px rgba(26,42,94,.25);}
+.landing-logo{font-size:56px;margin-bottom:12px;}
+.landing-card h1{font-size:22px;font-weight:800;color:var(--navy);margin-bottom:4px;}
+.landing-card .univ{font-size:12px;color:var(--text3);margin-bottom:6px;font-weight:500;}
+.landing-card .subtitle{color:var(--text2);font-size:13px;margin-bottom:28px;line-height:1.6;}
+.program-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:4px;}
+.program-btn{padding:20px 12px;background:var(--bg);border:2px solid var(--border);border-radius:16px;
+  color:var(--navy);font-family:var(--sans);font-size:12px;font-weight:700;cursor:pointer;
+  transition:all .2s;text-align:center;line-height:1.4;}
+.program-btn:hover{border-color:var(--orange);background:var(--orange3);color:var(--orange2);}
+.program-btn .pb-icon{font-size:32px;display:block;margin-bottom:8px;}
+
+/* COURSE SELECT */
+.course-select{align-items:center;justify-content:center;padding:32px 20px;
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy3) 100%);}
+.course-card{background:#fff;border-radius:24px;padding:36px;width:100%;max-width:520px;box-shadow:0 20px 60px rgba(26,42,94,.25);}
+.back-btn{background:none;border:none;color:var(--text3);font-family:var(--sans);font-size:13px;
+  cursor:pointer;display:flex;align-items:center;gap:6px;margin-bottom:20px;padding:0;font-weight:500;}
+.back-btn:hover{color:var(--orange);}
+.course-card h2{font-size:18px;font-weight:800;color:var(--navy);margin-bottom:4px;}
+.prog-badge{display:inline-flex;align-items:center;gap:6px;background:var(--bg2);
+  border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:11px;
+  color:var(--text2);margin-bottom:20px;font-family:var(--mono);}
+.course-list{display:flex;flex-direction:column;gap:10px;}
+.course-item{display:flex;align-items:center;gap:14px;padding:16px;background:var(--bg);
+  border:2px solid var(--border);border-radius:12px;cursor:pointer;transition:all .15s;}
+.course-item:hover{border-color:var(--orange);background:var(--orange3);}
+.course-item .ci-code{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--navy);min-width:72px;}
+.course-item .ci-name{font-size:13px;font-weight:600;flex:1;color:var(--text);}
+.course-item.locked{opacity:.45;cursor:not-allowed;}
+.course-item.locked:hover{border-color:var(--border);background:var(--bg);}
+.coming-soon{font-size:10px;color:var(--text3);background:var(--border);border-radius:10px;padding:2px 8px;font-family:var(--mono);}
+
+/* LOGIN */
+.login-screen{align-items:center;justify-content:center;padding:32px 20px;
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy3) 100%);}
+.login-card{background:#fff;border-radius:24px;padding:40px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(26,42,94,.25);}
+.course-info-box{background:linear-gradient(135deg,var(--navy),var(--navy3));border-radius:12px;
+  padding:14px 16px;margin-bottom:24px;display:flex;align-items:center;gap:12px;}
+.course-info-box .ci-icon{font-size:28px;}
+.course-info-box .ci-code{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.7);font-weight:700;}
+.course-info-box .ci-name{font-size:13px;font-weight:700;color:#fff;margin-top:2px;}
+.login-card h2{font-size:20px;font-weight:800;color:var(--navy);margin-bottom:4px;}
+.login-card p{color:var(--text2);font-size:13px;margin-bottom:22px;}
+.form-group{margin-bottom:14px;}
+.form-group label{font-size:12px;color:var(--text2);font-weight:600;display:block;margin-bottom:5px;}
+.form-group input{width:100%;padding:12px 14px;background:var(--bg);border:2px solid var(--border);
+  border-radius:10px;color:var(--text);font-family:var(--sans);font-size:15px;outline:none;transition:border-color .2s;}
+.form-group input:focus{border-color:var(--navy);}
+.btn-primary{width:100%;padding:14px;background:linear-gradient(135deg,var(--navy),var(--navy3));
+  border:none;border-radius:10px;color:#fff;font-family:var(--sans);font-size:15px;font-weight:700;
+  cursor:pointer;transition:opacity .2s;}
+.btn-primary:hover{opacity:.9;}
+.login-hint{margin-top:14px;padding:10px 12px;background:var(--orange3);border:1px solid #fed7aa;
+  border-radius:8px;font-size:12px;color:var(--orange2);text-align:center;font-weight:500;}
+.error-msg{color:var(--red);font-size:12px;margin-top:8px;display:none;font-weight:500;}
+.admin-link{margin-top:18px;text-align:center;}
+.admin-link button{background:none;border:none;color:var(--text3);font-size:12px;cursor:pointer;text-decoration:underline;}
+
+/* ADMIN LOGIN */
+.admin-login-card{background:#fff;border-radius:24px;padding:36px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(26,42,94,.25);}
+.admin-login-card h2{font-size:18px;font-weight:800;color:var(--navy);margin-bottom:20px;}
+
+/* ADMIN PANEL */
+.admin-screen{background:var(--bg);}
+.admin-header{background:linear-gradient(135deg,var(--navy),var(--navy3));padding:14px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:env(safe-area-inset-top,0);z-index:50;box-shadow:0 2px 12px rgba(26,42,94,.2);}
+.admin-header-left{display:flex;align-items:center;gap:10px;}
+.admin-badge{background:var(--orange);color:#fff;font-size:10px;font-family:var(--mono);
+  font-weight:700;padding:2px 8px;border-radius:10px;}
+.admin-header-title{font-size:14px;font-weight:700;color:#fff;}
+.admin-header-sub{font-size:10px;color:rgba(255,255,255,.6);font-family:var(--mono);}
+.admin-body{padding:28px;max-width:960px;margin:0 auto;}
+.section-title{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;}
+.section-title::after{content:'';flex:1;height:2px;background:var(--border);}
+.add-form{background:#fff;border:2px solid var(--border);border-radius:16px;padding:20px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end;}
+.form-row .form-group{margin-bottom:0;}
+.pwd-display{background:var(--green2);border:2px solid #86efac;border-radius:12px;
+  padding:14px 16px;margin-top:14px;display:none;}
+.pwd-title{font-size:11px;color:var(--green);font-weight:700;margin-bottom:4px;}
+.pwd-val{font-family:var(--mono);font-size:20px;font-weight:700;letter-spacing:3px;color:var(--navy);}
+.pwd-sub{font-size:11px;color:var(--text2);margin-top:4px;}
+.student-table{background:#fff;border:2px solid var(--border);border-radius:16px;overflow:hidden;margin-top:4px;}
+.table-header{display:grid;grid-template-columns:2fr 1.2fr 1fr 1fr 90px;
+  background:var(--navy);padding:12px 16px;font-size:11px;font-weight:700;color:rgba(255,255,255,.8);
+  font-family:var(--mono);text-transform:uppercase;letter-spacing:.5px;}
+.table-row{display:grid;grid-template-columns:2fr 1.2fr 1fr 1fr 90px;
+  padding:12px 16px;border-top:1px solid var(--border);font-size:14px;align-items:center;transition:background .15s;}
+.table-row:hover{background:var(--bg);}
+.tr-name{font-weight:600;color:var(--navy);}
+.tr-id{font-family:var(--mono);font-size:12px;color:var(--text2);}
+.status-pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-family:var(--mono);font-weight:700;}
+.status-pill.active{background:var(--green2);color:var(--green);}
+.status-pill.inactive{background:var(--bg3);color:var(--text3);}
+.icon-btn{background:none;border:2px solid var(--border);border-radius:6px;padding:4px 8px;
+  color:var(--text2);cursor:pointer;font-size:12px;transition:all .15s;}
+.icon-btn:hover{border-color:var(--orange);color:var(--orange);}
+.empty-table{padding:32px;text-align:center;color:var(--text2);font-size:14px;}
+
+/* APP HEADER */
+.app-header{background:linear-gradient(135deg,var(--navy),var(--navy3));padding:12px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:env(safe-area-inset-top,0);z-index:50;
+  box-shadow:0 2px 12px rgba(26,42,94,.2);flex-shrink:0;}
+.header-logo{display:flex;align-items:center;gap:10px;}
+.header-logo .atom{width:36px;height:36px;background:var(--orange);
+  border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.header-title{font-size:14px;font-weight:700;color:#fff;}
+.header-sub{font-size:10px;color:rgba(255,255,255,.6);font-family:var(--mono);}
+.header-right{display:flex;align-items:center;gap:8px;}
+.week-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:20px;
+  padding:4px 12px;font-size:11px;color:rgba(255,255,255,.8);font-family:var(--mono);}
+.week-badge span{color:#fff;font-weight:700;}
+.level-badge{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:4px 12px;cursor:pointer;}
+.level-badge .lb-animal{font-size:16px;}
+.level-badge .lb-name{font-size:10px;color:rgba(255,255,255,.8);font-weight:600;}
+
+/* APP LAYOUT */
+.app-layout{display:flex;flex:1;overflow:hidden;}
+.sidebar{width:236px;background:#fff;border-right:2px solid var(--border);
+  overflow-y:auto;padding:14px 0;flex-shrink:0;}
+.sidebar-section{padding:0 10px 10px;}
+.sidebar-section-title{font-size:9px;font-weight:700;color:var(--text3);
+  text-transform:uppercase;letter-spacing:1px;padding:0 8px;margin-bottom:5px;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:10px;
+  cursor:pointer;transition:all .15s;font-size:13px;color:var(--text2);
+  border:none;background:none;width:100%;text-align:left;font-family:var(--sans);}
+.nav-item:hover{background:var(--bg2);color:var(--navy);}
+.nav-item.active{background:var(--navy);color:#fff;}
+.nav-item .icon{font-size:14px;flex-shrink:0;}
+.nav-item .label{flex:1;font-weight:500;}
+.nav-item .badge{font-size:9px;background:var(--orange);color:#fff;border-radius:10px;padding:1px 5px;font-family:var(--mono);}
+.nav-item .check{font-size:11px;color:var(--green);}
+.nav-item.nav-locked{opacity:.42;cursor:not-allowed!important;}
+.nav-item.nav-locked:hover{background:none;color:var(--text2);}
+.content{flex:1;overflow-y:auto;padding:24px;}
+
+/* DASHBOARD */
+.dash-welcome{margin-bottom:24px;background:linear-gradient(135deg,var(--navy),var(--navy3));
+  border-radius:20px;padding:28px;color:#fff;}
+.dash-welcome h1{font-size:22px;font-weight:800;margin-bottom:4px;}
+.dash-welcome p{font-size:13px;opacity:.75;}
+.level-display{display:flex;align-items:center;gap:12px;margin-top:16px;
+  background:rgba(255,255,255,.1);border-radius:12px;padding:12px 16px;}
+.ld-animal{font-size:36px;}
+.ld-info{flex:1;}
+.ld-name{font-size:14px;font-weight:700;}
+.ld-sub{font-size:11px;opacity:.7;margin-top:2px;}
+.ld-bar{height:6px;background:rgba(255,255,255,.2);border-radius:10px;margin-top:8px;overflow:hidden;}
+.ld-bar-fill{height:100%;background:var(--orange);border-radius:10px;transition:width .5s;}
+
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:20px;}
+.stat-card{background:#fff;border:2px solid var(--border);border-radius:14px;padding:16px;position:relative;overflow:hidden;}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--navy),var(--orange));}
+.stat-num{font-size:28px;font-weight:800;color:var(--navy);}
+.stat-label{font-size:11px;color:var(--text2);margin-top:2px;font-weight:500;}
+
+/* TOPIC GRID */
+.topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;}
+.topic-card{background:#fff;border:2px solid var(--border);border-radius:14px;
+  padding:18px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--orange);transform:translateY(-2px);box-shadow:0 8px 24px rgba(249,115,22,.15);}
+.topic-card.completed{border-color:var(--green);}
+.topic-card.completed::after{content:'✓';position:absolute;top:10px;right:10px;
+  color:var(--green);font-size:14px;font-weight:800;}
+.tc-icon{font-size:26px;margin-bottom:10px;}
+.topic-card h3{font-size:13px;font-weight:700;margin-bottom:4px;color:var(--navy);}
+.topic-card p{font-size:11px;color:var(--text2);line-height:1.5;}
+.tc-progress{margin-top:12px;display:flex;align-items:center;gap:7px;font-size:10px;font-family:var(--mono);color:var(--text2);}
+.tc-bar{flex:1;height:4px;background:var(--border);border-radius:10px;overflow:hidden;}
+.tc-bar-fill{height:100%;background:var(--green);border-radius:10px;}
+.tc-badges{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap;}
+.tc-badge-dot{width:8px;height:8px;border-radius:50%;background:var(--border);}
+.tc-badge-dot.earned{background:var(--orange);}
+
+/* ACTIVITY SELECTOR */
+.activity-selector{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:20px;}
+.activity-btn{background:#fff;border:2px solid var(--border);border-radius:14px;
+  padding:18px 14px;cursor:pointer;transition:all .2s;text-align:center;font-family:var(--sans);}
+.activity-btn:hover{border-color:var(--navy);background:var(--bg2);}
+.activity-btn .ab-icon{font-size:28px;margin-bottom:8px;}
+.activity-btn .ab-title{font-size:13px;font-weight:700;color:var(--navy);}
+.activity-btn .ab-desc{font-size:11px;color:var(--text2);margin-top:3px;}
+
+/* EXERCISE */
+.ex-header{background:#fff;border:2px solid var(--border);border-radius:14px;
+  padding:16px 18px;margin-bottom:16px;display:flex;align-items:flex-start;justify-content:space-between;gap:14px;}
+.ex-topic-badge{display:inline-flex;align-items:center;gap:5px;background:var(--navy);
+  border-radius:20px;padding:3px 10px;font-size:10px;color:#fff;margin-bottom:6px;font-weight:600;}
+.ex-title{font-size:17px;font-weight:800;color:var(--navy);margin-bottom:2px;}
+.ex-meta{font-size:11px;color:var(--text2);font-family:var(--mono);}
+.progress-strip{height:6px;background:var(--border);border-radius:10px;margin-bottom:16px;overflow:hidden;}
+.progress-strip-fill{height:100%;background:linear-gradient(90deg,var(--navy),var(--orange));border-radius:10px;transition:width .3s;}
+
+/* MCQ */
+.q-card{background:#fff;border:2px solid var(--border);border-radius:14px;padding:22px;margin-bottom:14px;}
+.q-number{font-size:10px;font-family:var(--mono);color:var(--orange);font-weight:700;
+  text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+.q-text{font-size:15px;line-height:1.7;margin-bottom:16px;font-weight:500;color:var(--text);}
+.q-options{display:flex;flex-direction:column;gap:9px;}
+.q-option{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;
+  background:var(--bg);border:2px solid var(--border);cursor:pointer;transition:all .15s;font-size:14px;color:var(--text);}
+.q-option:hover{border-color:var(--navy);background:var(--bg2);}
+.q-option.correct{border-color:var(--green);background:var(--green2);color:var(--green);}
+.q-option.wrong{border-color:var(--red);background:var(--red2);color:var(--red);}
+.q-option.selected{border-color:var(--navy);background:var(--bg2);}
+.opt-letter{width:24px;height:24px;border-radius:50%;background:var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-family:var(--mono);font-weight:700;flex-shrink:0;color:var(--text2);}
+.q-option.correct .opt-letter{background:var(--green);color:#fff;}
+.q-option.wrong .opt-letter{background:var(--red);color:#fff;}
+.q-option.selected .opt-letter{background:var(--navy);color:#fff;}
+.exp-box{margin-top:12px;padding:12px 14px;background:#eff6ff;border:2px solid #bfdbfe;
+  border-radius:10px;font-size:13px;line-height:1.6;color:var(--text2);display:none;}
+.exp-box.visible{display:block;}
+.exp-label{font-size:10px;font-weight:700;color:var(--navy);margin-bottom:5px;}
+.ai-btn{margin-top:8px;padding:8px 14px;background:var(--orange3);border:2px solid #fed7aa;
+  border-radius:8px;color:var(--orange2);font-family:var(--sans);font-size:11px;font-weight:600;
+  cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .15s;}
+.ai-btn:hover{background:#fdba74;border-color:#f97316;color:#fff;}
+.ai-btn:disabled{opacity:.5;cursor:not-allowed;}
+.ai-box{margin-top:10px;padding:12px 14px;background:var(--orange3);border:2px solid #fed7aa;
+  border-radius:10px;font-size:13px;line-height:1.7;color:var(--text);white-space:pre-wrap;display:none;}
+.ai-box.visible{display:block;}
+
+/* FILL BLANK */
+.fillblank-card{background:#fff;border:2px solid var(--border);border-radius:14px;padding:24px;margin-bottom:14px;}
+.blank-sentence{font-size:16px;line-height:2.2;margin-bottom:18px;font-weight:500;color:var(--text);}
+.blank-span{display:inline-block;min-width:100px;height:32px;border-bottom:3px solid var(--navy);
+  vertical-align:middle;margin:0 4px;text-align:center;line-height:32px;font-weight:700;
+  color:var(--navy);font-family:var(--mono);transition:all .3s;position:relative;}
+.blank-span.filled{background:var(--bg2);border-radius:6px;border-bottom-color:var(--orange);padding:0 10px;}
+.blank-span.correct-fill{background:var(--green2);border-bottom-color:var(--green);color:var(--green);}
+.blank-span.wrong-fill{background:var(--red2);border-bottom-color:var(--red);color:var(--red);}
+.word-pool{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+.word-chip{padding:8px 14px;background:var(--navy);color:#fff;border-radius:20px;
+  font-size:13px;font-weight:600;cursor:grab;user-select:none;transition:all .2s;
+  border:2px solid transparent;}
+.word-chip:hover{background:var(--orange);transform:translateY(-1px);}
+.word-chip.used{opacity:.3;cursor:not-allowed;pointer-events:none;}
+.word-chip.dragging{opacity:.5;transform:scale(.95);}
+.pool-label{font-size:11px;font-weight:700;color:var(--text2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
+
+/* MATCHING */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px;}
+.match-col{display:flex;flex-direction:column;gap:8px;}
+.match-col-title{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
+.match-item{padding:12px 14px;background:#fff;border:2px solid var(--border);border-radius:10px;
+  font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;color:var(--text);}
+.match-item:hover{border-color:var(--navy);}
+.match-item.selected{border-color:var(--orange);background:var(--orange3);}
+.match-item.matched{border-color:var(--green);background:var(--green2);cursor:default;}
+.match-item.wrong-match{border-color:var(--red);background:var(--red2);}
+
+/* TRUE-FALSE */
+.tf-card{background:#fff;border:2px solid var(--border);border-radius:14px;padding:22px;margin-bottom:14px;}
+.tf-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+.tf-btn{padding:16px;border:2px solid var(--border);border-radius:10px;font-size:15px;font-weight:700;
+  cursor:pointer;background:var(--bg);transition:all .15s;font-family:var(--sans);}
+.tf-btn.true-btn:hover{border-color:var(--green);background:var(--green2);color:var(--green);}
+.tf-btn.false-btn:hover{border-color:var(--red);background:var(--red2);color:var(--red);}
+.tf-btn.correct{border-color:var(--green);background:var(--green2);color:var(--green);}
+.tf-btn.wrong{border-color:var(--red);background:var(--red2);color:var(--red);}
+
+/* CONTROLS */
+.ex-controls{display:flex;gap:10px;margin-top:16px;align-items:center;flex-wrap:wrap;}
+.q-counter{font-size:12px;color:var(--text2);font-family:var(--mono);margin-left:auto;font-weight:600;}
+.btn-sec{padding:10px 16px;background:#fff;border:2px solid var(--border);
+  border-radius:10px;color:var(--text);font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;}
+.btn-sec:hover{border-color:var(--navy);color:var(--navy);}
+.btn-sec:disabled{opacity:.4;cursor:not-allowed;}
+.btn-accent{padding:10px 20px;background:linear-gradient(135deg,var(--navy),var(--navy3));
+  border:none;border-radius:10px;color:#fff;font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s;}
+.btn-accent:hover{opacity:.9;}
+.btn-accent:disabled{opacity:.4;cursor:not-allowed;}
+.btn-sm{padding:8px 14px;font-size:12px;}
+.btn-orange{background:linear-gradient(135deg,var(--orange),var(--orange2));}
+
+/* SCORE */
+.score-screen{text-align:center;padding:32px 20px;}
+.score-ring{width:140px;height:140px;border-radius:50%;
+  background:conic-gradient(var(--navy) 0%,var(--navy) var(--pct,0%),var(--border) var(--pct,0%));
+  display:flex;align-items:center;justify-content:center;margin:0 auto 20px;position:relative;box-shadow:0 8px 32px rgba(26,42,94,.2);}
+.score-ring::before{content:'';position:absolute;inset:12px;border-radius:50%;background:#fff;}
+.score-inner{position:relative;z-index:1;}
+.score-num{font-size:30px;font-weight:800;color:var(--navy);}
+.score-denom{font-size:12px;color:var(--text2);font-family:var(--mono);}
+.score-title{font-size:20px;font-weight:800;color:var(--navy);margin-bottom:6px;}
+.score-msg{color:var(--text2);font-size:14px;margin-bottom:20px;line-height:1.6;}
+.badge-earned{background:linear-gradient(135deg,#fef3c7,#fde68a);border:2px solid #f59e0b;
+  border-radius:16px;padding:16px 24px;margin:0 auto 20px;max-width:300px;display:none;}
+.badge-earned.show{display:block;}
+.be-icon{font-size:40px;margin-bottom:6px;}
+.be-title{font-size:13px;font-weight:700;color:var(--yellow);}
+.be-name{font-size:16px;font-weight:800;color:var(--navy);}
+.breakdown{text-align:left;max-width:380px;margin:0 auto 20px;background:#fff;
+  border:2px solid var(--border);border-radius:14px;padding:16px;}
+.breakdown-item{display:flex;align-items:center;justify-content:space-between;
+  padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.breakdown-item:last-child{border-bottom:none;}
+.breakdown-q{color:var(--text2);flex:1;padding-right:12px;}
+.breakdown-status.ok{color:var(--green);font-weight:700;}
+.breakdown-status.no{color:var(--red);font-weight:700;}
+
+/* PROGRESS */
+.week-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
+.week-card{background:#fff;border:2px solid var(--border);border-radius:14px;padding:16px;}
+.week-card-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:12px;}
+.wt-item{display:flex;align-items:center;gap:7px;padding:5px 0;font-size:12px;}
+.wt-dot{width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0;}
+.wt-dot.done{background:var(--green);}
+.wt-dot.partial{background:var(--yellow);}
+.wt-name{flex:1;color:var(--text2);}
+.wt-score{font-family:var(--mono);font-size:10px;color:var(--text3);font-weight:600;}
+.prog-bar{height:4px;background:var(--border);border-radius:10px;overflow:hidden;margin:4px 0;}
+.prog-bar-fill{height:100%;background:linear-gradient(90deg,var(--navy),var(--orange));border-radius:10px;transition:width .5s;}
+.tp-header{display:flex;justify-content:space-between;margin-bottom:4px;margin-top:10px;}
+.tp-name{font-size:12px;color:var(--text);font-weight:500;}
+.tp-pct{font-size:11px;color:var(--navy);font-family:var(--mono);font-weight:700;}
+
+/* BADGES PAGE */
+.badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;}
+.badge-card{background:#fff;border:2px solid var(--border);border-radius:16px;
+  padding:20px;text-align:center;transition:all .2s;}
+.badge-card.earned-badge{border-color:var(--orange);background:linear-gradient(135deg,#fff7ed,#fff);}
+.badge-card.locked-badge{opacity:.45;filter:grayscale(.8);}
+.bc-animal{font-size:40px;margin-bottom:8px;}
+.bc-level{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;}
+.bc-name{font-size:14px;font-weight:800;color:var(--navy);margin-top:2px;}
+.bc-req{font-size:11px;color:var(--text2);margin-top:4px;}
+.bc-status{font-size:11px;font-weight:700;margin-top:8px;}
+.bc-status.earned{color:var(--orange);}
+.bc-status.locked{color:var(--text3);}
+
+/* CONCEPT MAP */
+.map-container{background:#fff;border:2px solid var(--border);border-radius:14px;padding:18px;overflow:auto;}
+svg.cmap{width:100%;min-height:460px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;
+  border-radius:12px;padding:14px 18px;font-size:13px;font-weight:600;
+  box-shadow:0 8px 32px rgba(26,42,94,.3);transform:translateX(120%);transition:transform .3s;z-index:200;}
+.toast.show{transform:translateX(0);}
+.toast.ok{background:var(--green);}
+.toast.err{background:var(--red);}
+.toast.badge-toast{background:linear-gradient(135deg,var(--orange),var(--orange2));}
+
+/* LEVEL UP OVERLAY */
+.levelup-overlay{position:fixed;inset:0;background:rgba(26,42,94,.85);z-index:300;
+  display:none;align-items:center;justify-content:center;}
+.levelup-overlay.show{display:flex;}
+.levelup-card{background:#fff;border-radius:24px;padding:48px 40px;text-align:center;max-width:360px;
+  box-shadow:0 20px 60px rgba(26,42,94,.4);animation:popIn .4s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popIn{from{transform:scale(.7);opacity:0;}to{transform:scale(1);opacity:1;}}
+.lu-animal{font-size:64px;margin-bottom:12px;animation:wobble 1s ease .3s;}
+@keyframes wobble{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+.lu-title{font-size:14px;color:var(--orange);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.lu-level{font-size:28px;font-weight:800;color:var(--navy);margin-bottom:6px;}
+.lu-desc{font-size:13px;color:var(--text2);margin-bottom:24px;line-height:1.6;}
+
+.loading{display:inline-flex;align-items:center;gap:5px;color:var(--text2);font-size:12px;}
+.loading::before{content:'';width:12px;height:12px;border:2px solid var(--border);
+  border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.flash-scene{perspective:1000px;width:100%;max-width:560px;margin:0 auto 20px;height:280px;cursor:pointer;}
+.flash-card{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1);}
+.flash-card.flipped{transform:rotateY(180deg);}
+.flash-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;border:2px solid var(--border);}
+.flash-front{background:#fff;border-color:var(--navy);}
+.flash-back{background:linear-gradient(135deg,var(--navy),var(--navy3));color:#fff;transform:rotateY(180deg);border-color:var(--navy);}
+.flash-hint{position:absolute;bottom:12px;font-size:11px;opacity:.5;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+.flash-q{font-size:17px;font-weight:700;color:var(--navy);line-height:1.5;}
+.flash-a{font-size:15px;font-weight:500;color:#fff;line-height:1.6;}
+.flash-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:16px;}
+.flash-dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:8px;}
+.flash-dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:background .2s;}
+.flash-dot.seen{background:var(--orange);}
+.flash-dot.current{background:var(--navy);}
+
+/* FLASH GRID */
+.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:4px;}
+.fc-item{height:200px;cursor:pointer;-webkit-perspective:1000px;perspective:1000px;}
+.fc-inner{width:100%;height:100%;position:relative;-webkit-transform-style:preserve-3d;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,0,.2,1);-webkit-transition:-webkit-transform .55s cubic-bezier(.4,0,.2,1);}
+.fc-inner.flipped{-webkit-transform:rotateY(180deg);transform:rotateY(180deg);}
+.fc-face{position:absolute;top:0;left:0;right:0;bottom:0;-webkit-backface-visibility:hidden;backface-visibility:hidden;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;text-align:center;overflow:hidden;}
+.fc-front{background:#fff;border:2px solid var(--navy);box-shadow:0 4px 16px rgba(26,42,94,.1);}
+.fc-back{background:linear-gradient(135deg,var(--navy) 0%,var(--navy3) 100%);border:2px solid var(--navy3);-webkit-transform:rotateY(180deg);transform:rotateY(180deg);box-shadow:0 4px 16px rgba(26,42,94,.2);}
+.fc-label{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;}
+.fc-front .fc-label{color:var(--orange);}
+.fc-back .fc-label{color:rgba(255,255,255,.5);}
+.fc-text{font-size:13px;font-weight:600;line-height:1.5;color:var(--navy);}
+.fc-back .fc-text{color:#fff;font-size:13px;}
+.fc-tap{font-size:10px;color:var(--text3);margin-top:10px;font-weight:500;}
+
+/* DRAG DROP */
+.dd-pool{display:flex;flex-wrap:wrap;gap:8px;padding:14px;background:#fff;border:2px solid var(--border);border-radius:12px;min-height:56px;margin-bottom:12px;}
+.dd-chip{padding:8px 14px;background:var(--navy);color:#fff;border-radius:20px;font-size:13px;font-weight:600;cursor:grab;user-select:none;transition:all .2s;border:2px solid transparent;}
+.dd-chip.dd-sel{background:var(--orange);transform:scale(1.05);}
+.dd-chip.dd-correct{background:var(--green);border-color:var(--green);}
+.dd-chip.dd-wrong{background:var(--red);border-color:var(--red);}
+.dd-cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;}
+.dd-cat{background:#fff;border:2px dashed var(--border);border-radius:12px;padding:12px;min-height:80px;transition:all .2s;cursor:pointer;}
+.dd-cat.dd-over{border-color:var(--orange);background:var(--orange3);}
+.dd-cat-title{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:8px;text-align:center;}
+.dd-cat-body{display:flex;flex-wrap:wrap;gap:6px;min-height:40px;}
+
+/* ODD ONE OUT */
+.oo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+.oo-opt{display:flex;align-items:center;gap:10px;padding:14px;background:var(--bg);border:2px solid var(--border);border-radius:12px;cursor:pointer;font-size:14px;font-weight:500;transition:all .15s;}
+.oo-opt:hover{border-color:var(--navy);background:var(--bg2);}
+.oo-opt.oo-correct{border-color:var(--red);background:var(--red2);color:var(--red);}
+.oo-opt.oo-wrong{border-color:var(--green);background:var(--green2);color:var(--green);}
+.oo-emoji{font-size:18px;}
+
+
+
+/* SPEED ROUND */
+.sp-timer-wrap{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.sp-timer-bar{height:10px;flex:1;background:var(--navy);border-radius:10px;transition:width 1s linear,background .3s;}
+.sp-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+.sp-opt{display:flex;align-items:center;gap:10px;padding:13px 14px;background:var(--bg);border:2px solid var(--border);border-radius:10px;cursor:pointer;font-size:13px;font-weight:500;transition:all .15s;}
+.sp-opt:hover{border-color:var(--navy);background:var(--bg2);}
+.sp-opt.sp-correct{border-color:var(--green);background:var(--green2);color:var(--green);}
+.sp-opt.sp-wrong{border-color:var(--red);background:var(--red2);color:var(--red);}
+.sp-letter{width:24px;height:24px;background:var(--navy);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.hidden{display:none!important;}
+@media(max-width:680px){.sidebar{display:none;}.content{padding:14px;}.topic-grid{grid-template-columns:1fr;}.stats-grid{grid-template-columns:repeat(2,1fr);}.form-row{grid-template-columns:1fr;}.match-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- LANDING -->
+<div id="scrLanding" class="screen landing" style="display:none!important;">
+  <div class="landing-card">
+    <div class="landing-logo">🏥</div>
+    <div class="univ">Sağlık Hizmetleri Meslek Yüksekokulu</div>
+    <h1>SHMYO Öğrenme Platformu</h1>
+    <p class="subtitle">Program seçerek derslerinize ulaşın ve gelişiminizi takip edin</p>
+    <div class="program-grid">
+      <button class="program-btn" onclick="selectProgram('tgt')">
+        <span class="pb-icon">🩻</span>Tıbbi Görüntüleme<br>Teknikleri
+      </button>
+      <button class="program-btn" onclick="selectProgram('tlt')">
+        <span class="pb-icon">🔬</span>Tıbbi Laboratuvar<br>Teknikleri
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- COURSE SELECT -->
+<div id="scrCourse" class="screen course-select" style="display:none!important;">
+  <div class="course-card">
+    <button class="back-btn" onclick="goTo('scrLanding')">← Geri</button>
+    <h2 id="courseProgramTitle">Program</h2>
+    <div class="prog-badge" id="courseProgramBadge"></div>
+    <div class="course-list" id="courseList"></div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="scrLogin" class="screen login-screen" style="display:none!important;">
+  <div class="login-card">
+    <!-- demo: geri butonu gizlendi -->
+    <div class="course-info-box" id="loginCourseInfo">
+  <div class="ci-icon">⚛️</div>
+  <div><div class="ci-code">TS 109</div><div class="ci-name">Temel Fizik</div></div>
+</div>
+    <h2>TS 109 — Demo Girişi</h2>
+    <p>Ad-soyadınızı ve size verilen şifreyi girin.</p>
+    <div class="form-group">
+      <label>Ad Soyad</label>
+      <input type="text" id="loginName" placeholder="Adınız Soyadınız" autocomplete="name"/>
+    </div>
+    <div class="form-group">
+      <label>Şifre</label>
+      <input type="password" id="loginPwd" placeholder="••••••" autocomplete="current-password"
+             onkeydown="if(event.key==='Enter')doLogin()"/>
+    </div>
+    <div class="error-msg" id="loginError"></div>
+    <br>
+    <button class="btn-primary" id="loginBtn" onclick="doLogin()">Derse Gir →</button>
+    <div class="login-hint">İlk girişte size verilen şifreyi kullanın.</div>
+    <!-- demo: admin linki gizlendi -->
+  </div>
+</div>
+
+<!-- ADMIN LOGIN -->
+<div id="scrAdminLogin" class="screen login-screen" style="display:none!important;">
+  <div class="admin-login-card">
+    <button class="back-btn" onclick="goTo('scrLogin')">← Geri</button>
+    <h2>🔐 Yönetici Girişi</h2>
+    <div class="form-group">
+      <label>Yönetici Şifresi</label>
+      <input type="password" id="adminPwd" placeholder="••••••••" onkeydown="if(event.key==='Enter')doAdminLogin()"/>
+    </div>
+    <div class="error-msg" id="adminError">Hatalı şifre.</div>
+    <br>
+    <button class="btn-primary" onclick="doAdminLogin()">Giriş Yap</button>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="scrAdmin" class="screen admin-screen">
+  <div class="admin-header">
+    <div class="admin-header-left">
+      <span style="font-size:22px">🏥</span>
+      <div>
+        <div class="admin-header-title">SHMYO Yönetici Paneli</div>
+        <div class="admin-header-sub" id="adminCourseLabel"></div>
+      </div>
+      <span class="admin-badge">YÖNETİCİ</span>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn-sec btn-sm" style="color:#fff;border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.1);" onclick="goTo('scrLogin')">← Derse Git</button>
+      <button class="btn-sec btn-sm" style="color:#fff;border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.1);" onclick="adminLogout()">Çıkış</button>
+    </div>
+  </div>
+  <div class="admin-body">
+    <div style="margin-bottom:28px;">
+      <div class="section-title">Yeni Öğrenci Ekle</div>
+      <div class="add-form">
+        <div class="form-row">
+          <div class="form-group"><label>Ad Soyad</label><input type="text" id="newStudentName" placeholder="Ayşe Yılmaz"/></div>
+          <div class="form-group"><label>Öğrenci No</label><input type="text" id="newStudentNo" placeholder="2024001"/></div>
+          <div><button class="btn-accent btn-orange" onclick="addStudent()" style="white-space:nowrap;padding:12px 16px;">+ Ekle & Şifre Üret</button></div>
+        </div>
+        <div class="pwd-display" id="pwdDisplay">
+          <div class="pwd-title">✅ Öğrenci eklendi — ilk şifre:</div>
+          <div class="pwd-val" id="pwdVal"></div>
+          <div class="pwd-sub" id="pwdSub"></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="section-title">Kayıtlı Öğrenciler <span id="studentCount" style="color:var(--text2);font-size:12px;font-weight:400;"></span></div>
+      <div style="margin-bottom:10px;display:flex;justify-content:flex-end;">
+          <button class="btn-accent btn-sm btn-orange" onclick="loadAllReport()">⬇️ Tüm Sınıf CSV</button>
+        </div>
+        <div class="student-table">
+        <div class="table-header"><span>Ad Soyad</span><span>Öğrenci No</span><span>Başarı</span><span>Durum</span><span>İşlem</span></div>
+        <div id="studentTableBody"><div class="empty-table">Henüz öğrenci eklenmedi.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="scrApp" class="screen active" style="flex-direction:column;">
+  <header class="app-header">
+    <div class="header-logo">
+      <div class="atom">⚛️</div>
+      <div>
+        <div class="header-title" id="appCourseTitle">TS 109</div>
+        <div class="header-sub" id="appStudentName">TS 109 — Demo · H1 &amp; H2 Açık</div>
+      </div>
+    </div>
+    <div style="background:rgba(249,115,22,.2);border:1px solid var(--orange);border-radius:20px;padding:3px 10px;font-size:10px;color:var(--orange);font-weight:700;font-family:var(--mono);">DEMO • H1-H2</div>
+      <div class="header-right">
+      <div class="week-badge">Hafta <span id="currentWeekDisp">—</span></div>
+      <div class="level-badge" onclick="showView('badges')" title="Rozetlerim">
+        <span class="lb-animal" id="headerAnimal">🐣</span>
+        <span class="lb-name" id="headerLevel">Civciv</span>
+      </div>
+      
+    </div>
+  </header>
+  <div class="app-layout">
+    <nav class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Genel</div>
+        <button class="nav-item active" id="nav-dashboard" onclick="showView('dashboard')"><span class="icon">🏠</span><span class="label">Kontrol Paneli</span></button>
+        <button class="nav-item" id="nav-progress" onclick="showView('progress')"><span class="icon">📈</span><span class="label">Gelişimim</span></button>
+        <button class="nav-item" id="nav-badges" onclick="showView('badges')"><span class="icon">🏅</span><span class="label">Rozetlerim</span></button>
+        <button class="nav-item" id="nav-map" onclick="showView('map')"><span class="icon">🗺️</span><span class="label">Kavram Haritası</span></button>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Konular</div>
+        <div id="topicNav"></div>
+      </div>
+    </nav>
+    <main class="content" id="mainContent"></main>
+  </div>
+</div>
+
+<!-- LEVEL UP OVERLAY -->
+<div class="levelup-overlay" id="levelupOverlay">
+  <div class="levelup-card">
+    <div class="lu-animal" id="luAnimal">🐣</div>
+    <div class="lu-title">Seviye Atladın!</div>
+    <div class="lu-level" id="luLevel">Civciv</div>
+    <div class="lu-desc" id="luDesc">Harika gidiyorsun, devam et!</div>
+    <button class="btn-accent" onclick="closeLevelUp()">Devam Et 🎉</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════
+// CONFIG
+// ════════════════════════════════════════════
+const ADMIN_PASSWORD = 'shmyo2024';
+const DEMO_MODE = true;          // Demo: program seçimi yok, sadece TGT açılır
+const DEMO_MAX_WEEK = 2;         // Demo: yalnızca Hafta 1-2 açık
+
+const PROGRAMS = {
+  tgt:{name:'Tıbbi Görüntüleme Teknikleri',icon:'🩻',courses:[
+    {code:'TS 109',name:'Temel Fizik',icon:'⚛️',active:true},
+    {code:'TGT 101',name:'Anatomi',icon:'🦴',active:false},
+    {code:'TGT 201',name:'Radyoloji Temelleri',icon:'☢️',active:false},
+  ]},
+  tlt:{name:'Tıbbi Laboratuvar Teknikleri',icon:'🔬',courses:[
+    {code:'TLT 101',name:'Biyokimya',icon:'🧪',active:false},
+    {code:'TLT 102',name:'Mikrobiyoloji',icon:'🦠',active:false},
+  ]},
+};
+
+// ════════════════════════════════════════════
+// ROZET / SEVİYE SİSTEMİ
+// ════════════════════════════════════════════
+const LEVELS = [
+  {id:'civciv',  animal:'🐣', name:'Civciv',    minWeeks:0,  desc:'Yeni başladın, hoş geldin!'},
+  {id:'kedi',    animal:'🐱', name:'Kedi',       minWeeks:1,  desc:'İlk haftayı tamamladın!'},
+  {id:'kopek',   animal:'🐶', name:'Köpek',      minWeeks:2,  desc:'İkinci haftayı da geçtin!'},
+  {id:'tilki',   animal:'🦊', name:'Tilki',      minWeeks:3,  desc:'Üçüncü haftada parlıyorsun!'},
+  {id:'kurt',    animal:'🐺', name:'Kurt',       minWeeks:4,  desc:'Dördüncü haftada güçlendin!'},
+  {id:'kartal',  animal:'🦅', name:'Kartal',     minWeeks:5,  desc:'Beşinci haftada zirveye uçuyorsun!'},
+  {id:'aslan',   animal:'🦁', name:'Aslan',      minWeeks:6,  desc:'Tüm haftalarda ustalaştın — gerçek bir Aslan!'},
+];
+
+const FLASH_CARDS = {"units": [{"q": "SI'nin 7 temel birimi nelerdir?", "a": "Metre (m), kilogram (kg), saniye (s), Ampere (A), Kelvin (K), mol (mol), kandela (cd)"}, {"q": "Gray (Gy) neyi ölçer?", "a": "Soğurulan radyasyon dozunu. 1 Gy = 1 J/kg"}, {"q": "Sievert (Sv) neyi ölçer?", "a": "Ekvivalent dozu (biyolojik etki). Sv = Gy × kalite faktörü"}, {"q": "Nano (n) öneki kaç?", "a": "10⁻⁹ — Örnek: 1 nm = 10⁻⁹ m. X-ışını dalga boyu nm mertebesindedir."}, {"q": "Becquerel (Bq) neyi ölçer?", "a": "Radyoaktiviteyi. 1 Bq = saniyede 1 çürüme. Eski birim: Curie (Ci)"}, {"q": "Türetilmiş birim nedir?", "a": "Temel birimlerden elde edilen birim. Örnek: hız (m/s), kuvvet (N = kg·m/s²)"}, {"q": "1 MeV kaç Joule?", "a": "1 MeV = 1,6×10⁻¹³ J. Nükleer/radyasyon fiziğinde sık kullanılır."}, {"q": "Boyut analizi ne işe yarar?", "a": "Formüllerin doğruluğunu boyutsal tutarlılık açısından kontrol eder."}], "vectors": [{"q": "Vektör ile skaler farkı nedir?", "a": "Vektör: büyüklük + yön (kuvvet, hız). Skaler: yalnızca büyüklük (kütle, sıcaklık)."}, {"q": "Birim vektör nedir?", "a": "Büyüklüğü tam 1 olan vektör. î (x), ĵ (y), k̂ (z) yönlerini gösterir."}, {"q": "Vektör bileşenleri nasıl bulunur?", "a": "vₓ = v·cosθ, vᵧ = v·sinθ. θ: yatay eksen ile açı."}, {"q": "3 N ve 4 N dik kuvvetlerin bileşkesi?", "a": "R = √(3²+4²) = 5 N (Pisagor teoremi)."}, {"q": "Skaler çarpım (dot product) sonucu?", "a": "A·B = |A||B|cosθ → sayısal değer. İki vektör dikse A·B = 0."}, {"q": "Vektörel çarpım (cross product) sonucu?", "a": "A×B = |A||B|sinθ yönünde vektör. Her ikisine de dik."}, {"q": "Paralelkenar kuralı ne işe yarar?", "a": "İki vektörün bileşkesini geometrik olarak bulmaya yarar."}, {"q": "Negatif vektör nedir?", "a": "Aynı büyüklükte, zıt yönlü vektör (-A)."}], "force": [{"q": "Newton'un 1. Yasası nedir?", "a": "Eylemsizlik: Net kuvvet sıfırsa cisim hızını ve yönünü korur."}, {"q": "Newton'un 2. Yasası nedir?", "a": "F = m·a. Kuvvet, kütlenin ivmesiyle doğru orantılıdır."}, {"q": "Newton'un 3. Yasası nedir?", "a": "Her etkiye eşit büyüklükte ve zıt yönde tepki vardır."}, {"q": "Ağırlık ile kütle farkı?", "a": "Kütle: madde miktarı (kg, skaler). Ağırlık: W = mg (N, vektör)."}, {"q": "Sürtünme kuvveti formülü?", "a": "f = μ·N. μ: sürtünme katsayısı, N: normal kuvvet."}, {"q": "Neden μₛ > μₖ?", "a": "Harekete başlatmak için yüzey pürüzleri aşılmalı; hareket sırasında daha az direnç var."}, {"q": "Eğik düzlemde ağırlığın bileşenleri?", "a": "Eğime paralel: mg·sinθ. Eğime dik: mg·cosθ."}, {"q": "Evrensel gravite sabiti G?", "a": "G = 6,67×10⁻¹¹ N·m²/kg². Newton'un kütle çekim yasasında kullanılır."}], "motion": [{"q": "Ortalama hız formülü?", "a": "v̄ = Δx/Δt. Toplam yer değiştirme bölü geçen süre."}, {"q": "İvme nedir?", "a": "a = Δv/Δt. Birim: m/s². Hız-zaman grafiğinin eğimidir."}, {"q": "Serbest düşmede t=3 s'deki hız?", "a": "v = g·t = 10×3 = 30 m/s (v₀=0, g=10 m/s²)."}, {"q": "h = ½gt² formülü ne zaman kullanılır?", "a": "Başlangıç hızı sıfır olan serbest düşmede (hava direnci ihmal)."}, {"q": "Eğik atışta maksimum menzil açısı?", "a": "45°. Çünkü menzil R = v²sin(2θ)/g; sin(90°)=1 maksimum."}, {"q": "Düzgün dairesel harekette ivme neden var?", "a": "Hızın yönü sürekli değişiyor → merkezcil ivme a = v²/r."}, {"q": "Hız-zaman grafiği altındaki alan neyi verir?", "a": "Yer değiştirmeyi (m). Konum-zaman grafiğinin eğimi hız verir."}, {"q": "Projektil harekette yatay ve düşey?", "a": "Yatay: düzgün (ivmesiz). Düşey: g ivmeli. Bağımsız analiz edilir."}], "momentum": [{"q": "Momentum formülü ve birimi?", "a": "p = m·v. Birimi: kg·m/s = N·s. Vektörel büyüklüktür."}, {"q": "Momentum ne zaman korunur?", "a": "Net dış kuvvet sıfır olduğunda (izole sistem). ΣF_dış=0 → Σp=sabit."}, {"q": "İmpuls nedir?", "a": "J = F·Δt = Δp. Kuvvetin zamanla çarpımı; momentumdaki değişime eşit."}, {"q": "Elastik çarpışmada ne korunur?", "a": "Hem momentum (p) hem kinetik enerji (KE) korunur."}, {"q": "Plastik çarpışmada ne korunur?", "a": "Yalnızca momentum korunur. KE bir kısmı ısı/ses enerjisine dönüşür."}, {"q": "Hava yastığı neden hayat kurtarır?", "a": "Çarpışma süresini (Δt) uzatır → ortalama kuvvet (F=J/Δt) azalır."}, {"q": "Roket iticisi hangi yasaya dayanır?", "a": "Momentum korunumu + Newton'un 3. yasası. Gaz geri → roket ileri."}, {"q": "2 kg, 6 m/s + 4 kg, 0 m/s → plastik çarpışma sonucu?", "a": "v = (2×6)/(2+4) = 2 m/s."}], "equilibrium": [{"q": "Statik denge için iki koşul?", "a": "ΣF = 0 (öteleme dengesi) ve Στ = 0 (dönme dengesi)."}, {"q": "Moment (tork) formülü?", "a": "τ = r × F × sinθ. Birimi: N·m. θ: kuvvet ile kol arasındaki açı."}, {"q": "Kaldıraç denge koşulu?", "a": "F₁·r₁ = F₂·r₂. Momentler eşit olmalı."}, {"q": "Kütle merkezi (KM) nedir?", "a": "Cismin kütlesinin eşit dağıldığı varsayılan nokta. Kuvvet buraya uygulanırsa saf öteleme olur."}, {"q": "Homojen levhanın KM'si nerede?", "a": "Geometrik merkezinde. Düzgün cisimde KM = geometrik merkez."}, {"q": "10 N × 2 m = ?", "a": "τ = 20 N·m. (Kuvvet dik uygulanıyorsa sinθ=1.)"}, {"q": "KM cismin dışında olabilir mi?", "a": "Evet! Halka, at nalı gibi şekillerde KM cismin geometrisi dışında kalabilir."}, {"q": "Denge türleri nelerdir?", "a": "Kararlı (KM alçalır → geri döner), Kararsız (KM yükselir), Kayıtsız (KM değişmez)."}], "energy": [{"q": "İş formülü ve birimi?", "a": "W = F·d·cosθ. Birimi: Joule (J) = N·m. Dik kuvvet iş yapmaz (cos90°=0)."}, {"q": "Kinetik enerji formülü?", "a": "KE = ½mv². Hız 2 katına çıkarsa KE 4 katına çıkar."}, {"q": "Potansiyel enerji formülü?", "a": "EP = mgh. h yüksekliğindeki cismin çekim alanındaki enerji."}, {"q": "Güç nedir?", "a": "P = W/t = F·v. Birimi: Watt (W) = J/s."}, {"q": "Enerji korunumu yasası?", "a": "Enerji yaratılamaz ve yok edilemez; yalnızca türden türe dönüşür."}, {"q": "X-ışını tüpünde enerji dönüşümü?", "a": "Elektrik enerjisi → %99 ısı + %1 X-ışını. Bu yüzden soğutma kritiktir."}, {"q": "1 kWh kaç Joule?", "a": "1 kWh = 3,6×10⁶ J = 3.600.000 J."}, {"q": "Yay enerjisi formülü?", "a": "E = ½kx². k: yay sabiti (N/m), x: uzama (m)."}], "electrostatics": [{"q": "Coulomb yasası?", "a": "F = k·q₁·q₂/r². k=9×10⁹ N·m²/C². Ters kare yasası."}, {"q": "Elektrik alan birimi ve tanımı?", "a": "E = F/q. Birimi: N/C = V/m. Birim pozitif yüke etki eden kuvvet."}, {"q": "İletken içinde elektrik alan neden sıfır?", "a": "Serbest elektronlar yüzeye taşınır; iç E=0. Faraday kafesi prensibi."}, {"q": "Kapasitörde depolanan enerji?", "a": "U = ½CV². Defibrilatörler bu enerjiyi ani boşaltır."}, {"q": "X-ışını tüpünde yüksek voltaj görevi?", "a": "Katottan çıkan elektronları anoda doğru hızlandırır. KE → X-ışını."}, {"q": "1 Coulomb kaç elektron yükü?", "a": "1 C = 6,25×10¹⁸ elektron yükü. (e = 1,6×10⁻¹⁹ C)"}, {"q": "Elektrik alan çizgileri neyi gösterir?", "a": "Pozitif yükten dışarı çıkar, negatife girer. Kuvvet yönünü gösterir."}, {"q": "Farad (F) neyin birimi?", "a": "Kapasitansın birimi. C = Q/V. 1 F = 1 C/V."}], "electricity": [{"q": "Ohm yasası?", "a": "V = I·R. Gerilim = Akım × Direnç."}, {"q": "Seri devrede toplam direnç?", "a": "R = R₁+R₂+R₃+… Akım sabit, gerilimler toplanır."}, {"q": "Paralel devrede toplam direnç?", "a": "1/R = 1/R₁+1/R₂+… Gerilim sabit, akımlar toplanır."}, {"q": "Kirchhoff'un akım yasası (KCL)?", "a": "Bir düğüme giren akımlar = çıkan akımlar. Σi = 0."}, {"q": "Kirchhoff'un gerilim yasası (KVL)?", "a": "Kapalı çevrimde gerilim düşümleri toplamı = 0."}, {"q": "Elektrik gücü formülleri?", "a": "P = V·I = I²R = V²/R. Birimi: Watt (W)."}, {"q": "AC ile DC farkı?", "a": "DC: sabit yön/büyüklük. AC: periyodik değişen yön ve büyüklük. Şebeke AC'dir."}, {"q": "Vrms ve Vpeak ilişkisi?", "a": "Vrms = Vpeak/√2 ≈ 0,707·Vpeak. Türkiye şebekesi: 220 V rms."}], "magnetism": [{"q": "Manyetik alan kaynağı?", "a": "Hareket eden elektrik yükleri (akım). Durgun yük manyetik alan oluşturmaz."}, {"q": "Tesla (T) neyin birimi?", "a": "Manyetik alan (akı yoğunluğu) birimi. 1 T = 1 Wb/m²."}, {"q": "Lorentz kuvveti formülü?", "a": "F = qvBsinθ. θ=0°→F=0; θ=90°→F maksimum."}, {"q": "Manyetik alan çizgilerinin özelliği?", "a": "Kapalı eğriler oluşturur. Manyetik monopol yoktur."}, {"q": "MRI'da kullanılan alan şiddeti?", "a": "Klinik MRI: 1,5 T – 3 T. Araştırma sistemleri 7 T'ya çıkabilir."}, {"q": "MRI hangi prensiple çalışır?", "a": "Nükleer manyetik rezonans (NMR). Güçlü B alanı + RF dalgası → H protonları."}, {"q": "Sağ el kuralı ne için?", "a": "Akım yönü ve manyetik alan biliniyorsa kuvvet yönünü bulmak için."}, {"q": "Elektromıknatıs nasıl çalışır?", "a": "Bobin içinden akım geçince manyetik alan oluşur. Akım kesilince alan kaybolur."}], "electromag": [{"q": "Faraday yasası?", "a": "EMK = -dΦ/dt. İndüklenen EMK manyetik akı değişim hızıyla orantılı."}, {"q": "Lenz yasası?", "a": "İndüklenen akım, onu yaratan akı değişimine karşı koyar. Enerji korunumunun gereği."}, {"q": "Transformatör oranı?", "a": "V₁/V₂ = N₁/N₂. Yükselteç: N₂>N₁ → V₂>V₁."}, {"q": "EM dalgaların boşluktaki hızı?", "a": "c = 3×10⁸ m/s (ışık hızı). Ortam gerektirmez."}, {"q": "X-ışını ile gama ışını farkı?", "a": "X-ışını: elektronik geçiş/bremsstrahlung. Gama: nükleer geçiş. Her ikisi de EM foton."}, {"q": "Faraday kafesi nedir?", "a": "İletken kutu: içinde E=0. Elektronik cihazları dış alandan korur."}, {"q": "Step-up transformatörde gerilim artar mı?", "a": "Evet. N₂>N₁ → V₂>V₁. Ama akım azalır; güç (P=VI) korunur."}, {"q": "EM dalgalar yayılmak için ortam ister mi?", "a": "Hayır. Boşlukta c=3×10⁸ m/s ile yayılır."}], "radiation": [{"q": "İyonlaştırıcı radyasyon nedir?", "a": "Atomlardan elektron koparabilecek enerjiye sahip radyasyon: X, γ, α, β, nötron."}, {"q": "Alfa (α) parçacığı nedir?", "a": "He-4 çekirdeği: 2p+2n. +2 yüklü. Kâğıt veya 5 cm hava ile durur."}, {"q": "Beta eksi (β⁻) nedir?", "a": "Çekirdekten yüksek enerjili elektron. Nötron → proton + e⁻ + antinötrino."}, {"q": "Gamma (γ) ışını nedir?", "a": "Nükleer geçişten yüksek enerjili EM foton. Yüksüz. En yüksek nüfuz gücü."}, {"q": "Nüfuz gücü sıralaması?", "a": "γ > β > α. Gamma kurşun+beton ister; alfa kâğıtla durur."}, {"q": "PET görüntülemede ne kullanılır?", "a": "β⁺ (pozitron) yayıcı izotop. Pozitron + e⁻ → 2×511 keV gama çifti."}, {"q": "SPECT görüntülemede ne kullanılır?", "a": "Gama yayıcı izotoplar (örn. Tc-99m). Tek foton emisyon tomografisi."}, {"q": "Radyasyonun DNA üzerindeki etkisi?", "a": "Tek/çift zincir kırıkları, baz hasarı → hücre ölümü veya mutasyon."}], "interaction": [{"q": "Fotoelektrik etkide ne olur?", "a": "Foton tamamen soğurulur → iç kabuk elektronu (fotoelektron) kopar. Düşük E + yüksek Z."}, {"q": "Compton saçılması nedir?", "a": "Foton dış elektron ile çarpışır → enerji kaybeder + yön değiştirir. 30-150 keV baskın."}, {"q": "Çift oluşumu için minimum enerji?", "a": "1,022 MeV. Foton → e⁻ + e⁺ (pozitron). Yüksek Z maddede daha sık."}, {"q": "HVL (Yarı Değer Kalınlığı) nedir?", "a": "Radyasyon yoğunluğunu ½'ye indiren zırh kalınlığı. HVL = 0,693/μ."}, {"q": "Ters kare yasası?", "a": "I ∝ 1/r². Mesafe 2 katına → yoğunluk ¼'e düşer. Temel radyasyon koruması."}, {"q": "Lineer zayıflama katsayısı (μ) ne gösterir?", "a": "Radyasyonun birim mesafede soğurulma olasılığı. μ büyükse HVL küçük."}, {"q": "Fotoelektrik etkinin Z bağımlılığı?", "a": "Z³⁻⁴ ile orantılı artar. Kurşun (Z=82) çok etkili fotoelektrik absorber."}, {"q": "Radyasyona karşı üç temel koruma ilkesi?", "a": "Zaman (kısa tut), Mesafe (uzak dur, I∝1/r²), Zırhlama (HVL malzeme)."}]};
+
+const TOPIC_BADGES = [
+  {id:'ilk_adim',  icon:'⭐', name:'İlk Adım',   desc:'İlk konuyu tamamla'},
+  {id:'hizli_top', icon:'🎯', name:'Keskin Nişancı', desc:'Bir konuda %100 al'},
+  {id:'azimli',    icon:'💪', name:'Azimli',      desc:'3 konu tamamla'},
+  {id:'bilge',     icon:'🧠', name:'Bilge',       desc:'5 konu tamamla'},
+  {id:'usta',      icon:'🏆', name:'Usta',        desc:'Tüm konuları tamamla'},
+  {id:'merakli',   icon:'🔬', name:'Meraklı',     desc:'Claude\'a 3 soru sor'},
+  {id:'hafiza',    icon:'💡', name:'Hafıza Şampiyonu', desc:'Boşluk doldurma aktivitesini tamamla'},
+  {id:'eslestirme',icon:'🔗', name:'Bağlantı Ustası', desc:'Eşleştirme aktivitesini tamamla'},
+];
+
+// ════════════════════════════════════════════
+// TOPICS — TS 109 (10 soru/konu gösterilir, havuzdan random seçilir)
+// ════════════════════════════════════════════
+const TOPICS = [
+ {id:'units',week:1,icon:'📏',title:'Ölçme ve Birim Sistemleri',desc:'SI birimleri, temel/türetilmiş büyüklükler, birim dönüşümleri.',
+  questions:[
+   {q:'SI birim sisteminde uzunluğun temel birimi nedir?',opts:['Santimetre','Metre','Kilometre','Milimetre'],ans:1,exp:'SI sisteminde uzunluk birimi metredir (m).'},
+   {q:'Hangi büyüklük türetilmiş birimdir?',opts:['Kütle','Zaman','Hız','Sıcaklık'],ans:2,exp:'Hız = m/s; mesafe ve zamandan türetilir.'},
+   {q:'1 km² kaç m²\'dir?',opts:['1.000','10.000','100.000','1.000.000'],ans:3,exp:'1 km = 1000 m → 1 km² = 1.000.000 m².'},
+   {q:'Soğurulan radyasyon dozu için SI birimi hangisidir?',opts:['Röntgen','Gray (Gy)','Curie','Rad'],ans:1,exp:'Soğurulan doz birimi Gray (Gy) = J/kg.'},
+   {q:'Ölçüm belirsizliğini azaltmanın en iyi yolu nedir?',opts:['Tek ölçüm','Tahmin','Çok ölçüm ortalaması','Farklı birim'],ans:2,exp:'Tekrarlı ölçüm ortalaması rastgele hataları azaltır.'},
+   {q:'SI\'da kütlenin temel birimi hangisidir?',opts:['Gram','Kilogram','Ton','Pound'],ans:1,exp:'Kütlenin SI birimi kilogram (kg)\'dır.'},
+   {q:'SI\'da sıcaklığın birimi nedir?',opts:['Celsius','Fahrenheit','Kelvin','Rankine'],ans:2,exp:'SI\'da sıcaklık birimi Kelvin (K)\'dir.'},
+   {q:'1 ms (milisaniye) kaç saniyedir?',opts:['0,1 s','0,01 s','0,001 s','0,0001 s'],ans:2,exp:'Mili öneki 10⁻³ demektir; 1 ms = 0,001 s.'},
+   {q:'Nano (n) öneki kaç anlamına gelir?',opts:['10⁻⁶','10⁻⁷','10⁻⁸','10⁻⁹'],ans:3,exp:'Nano = 10⁻⁹. 1 nm = 10⁻⁹ m. X-ışını dalga boyları nanometre cinsinden ifade edilir.'},
+   {q:'Hangi ifade skaler büyüklüğe örnektir?',opts:['Kuvvet','Hız (vektörel)','Yerçekimi ivmesi','Kütle'],ans:3,exp:'Kütle yalnızca büyüklüğü olan skaler bir büyüklüktür.'},
+   {q:'Ekvivalent doz birimi nedir?',opts:['Gray','Sievert (Sv)','Becquerel','Tesla'],ans:1,exp:'Ekvivalent doz birimi Sievert (Sv)\'dir; biyolojik etkiyi gösterir.'},
+   {q:'Radyoaktivitenin SI birimi hangisidir?',opts:['Curie','Rad','Becquerel (Bq)','Gray'],ans:2,exp:'Radyoaktivite birimi Becquerel (Bq) = saniyede bir çürüme.'},
+   {q:'10 cm kaç mm\'dir?',opts:['1 mm','10 mm','100 mm','1000 mm'],ans:2,exp:'1 cm = 10 mm → 10 cm = 100 mm.'},
+   {q:'Frekansın SI birimi nedir?',opts:['Watt','Hertz (Hz)','Joule','Pascal'],ans:1,exp:'Frekans birimi Hertz (Hz) = 1/s. Ultrason frekansları MHz cinsinden belirtilir.'},
+   {q:'Pascal (Pa) hangi büyüklüğün birimidir?',opts:['Enerji','Güç','Basınç','Elektrik akımı'],ans:2,exp:'1 Pa = 1 N/m². Basınç birimi Pascal\'dır.'},
+   {q:'Bir büyüklüğün boyutu ne anlama gelir?',opts:['Sayısal değeri','Birimi','Temel büyüklükler cinsinden ifadesi','Ölçüm hassasiyeti'],ans:2,exp:'Boyut analizi, büyüklüklerin temel büyüklükler cinsinden nasıl ifade edildiğini gösterir.'},
+   {q:'1 MeV kaç Joule\'dür? (1 eV = 1,6×10⁻¹⁹ J)',opts:['1,6×10⁻²⁵ J','1,6×10⁻¹³ J','1,6×10⁻¹⁹ J','1,6×10⁻⁷ J'],ans:1,exp:'1 MeV = 10⁶ eV = 10⁶ × 1,6×10⁻¹⁹ J = 1,6×10⁻¹³ J. Nükleer enerji bu birimle ifade edilir.'},
+   {q:'Saatlik enerji tüketimi kWh\'nin Joule cinsinden karşılığı nedir?',opts:['3.600 J','360.000 J','3.600.000 J','36.000 J'],ans:2,exp:'1 kWh = 1000 W × 3600 s = 3.600.000 J = 3,6×10⁶ J.'},
+   {q:'Anlamlı rakam (significant figure) kavramı neyi belirtir?',opts:['Tam sayı basamakları','Ölçümde güvenilir basamak sayısı','Ondalık basamak sayısı','Sıfır sayısı'],ans:1,exp:'Anlamlı rakamlar ölçümün kesinliğini gösterir; ölçüm hassasiyetiyle doğrudan ilişkilidir.'},
+   {q:'Birim analizi (dimensional analysis) ne işe yarar?',opts:['Sadece dönüşüm','Formüllerin doğruluğunu kontrol etme','Ölçüm hatasını bulma','Grafik çizme'],ans:1,exp:'Birim analizi formüllerin boyutsal tutarlılığını kontrol eder ve birim dönüşümlerinde kullanılır.'},
+  ],
+  fillBlanks:[
+   {sentence:'SI birim sisteminde uzunluk birimi ___ , kütle birimi ___ ve zaman birimi ___ \'dir.',blanks:['metre','kilogram','saniye'],pool:['metre','kilogram','saniye','gram','dakika','santimetre','Newton']},
+   {sentence:'Soğurulan radyasyon dozu ___ , ekvivalant doz ___ birimi ile ölçülür.',blanks:['Gray','Sievert'],pool:['Gray','Sievert','Becquerel','Curie','Watt','Pascal']},
+   {sentence:'Nano öneki ___ değerini, Mega öneki ___ değerini ifade eder.',blanks:['10⁻⁹','10⁶'],pool:['10⁻⁹','10⁶','10⁻³','10³','10⁻⁶','10⁹']},
+  ],
+  matching:[
+   {pairs:[{l:'Gray (Gy)',r:'Soğurulan doz'},{l:'Sievert (Sv)',r:'Ekvivalent doz'},{l:'Becquerel (Bq)',r:'Radyoaktivite'},{l:'Tesla (T)',r:'Manyetik alan'}]},
+   {pairs:[{l:'Kilo (k)',r:'10³'},{l:'Mega (M)',r:'10⁶'},{l:'Mili (m)',r:'10⁻³'},{l:'Mikro (μ)',r:'10⁻⁶'}]},
+  ],
+  trueFalse:[
+   {s:'Kilogram, SI sisteminde kütlenin temel birimidir.',ans:true,exp:'Doğru. kg SI\'nın yedi temel biriminden biridir.'},
+   {s:'Santimetre, SI\'nın temel uzunluk birimidir.',ans:false,exp:'Yanlış. Temel birim metredir; santimetre türetilmiştir.'},
+   {s:'1 Gray = 1 Joule/kilogram\'dır.',ans:true,exp:'Doğru. 1 Gy = 1 J/kg; soğurulan enerji miktarını gösterir.'},
+   {s:'Hertz birimi dalga boyunu ölçer.',ans:false,exp:'Yanlış. Hertz frekans birimidir (Hz = 1/s); dalga boyu metre cinsinden ölçülür.'},
+   {s:'Nano öneki 10⁻⁹ değerini temsil eder.',ans:true,exp:'Doğru. 1 nm = 10⁻⁹ m. X-ışınları nanometre mertebesinde dalga boyuna sahiptir.'},
+  ]
+ },
+ {id:'vectors',week:2,icon:'➡️',title:'Vektörler',desc:'Skaler/vektörel büyüklükler, bileşenler, vektör işlemleri.',
+  questions:[
+   {q:'Hangisi vektörel büyüklüktür?',opts:['Kütle','Sıcaklık','Kuvvet','Hacim'],ans:2,exp:'Kuvvetin büyüklüğü ve yönü var → vektörel.'},
+   {q:'3 N ve 4 N\'luk dik iki kuvvetin bileşkesi?',opts:['1 N','5 N','7 N','12 N'],ans:1,exp:'√(9+16) = 5 N.'},
+   {q:'x bileşeni formülü (θ: yatay ile açı)?',opts:['v·sinθ','v·cosθ','v·tanθ','v/cosθ'],ans:1,exp:'vₓ = v·cosθ, vᵧ = v·sinθ.'},
+   {q:'İki vektörün geometrik toplamı hangi yöntemle?',opts:['Çarpım','Bölüm','Paralelkenar','Öklid'],ans:2,exp:'Paralelkenar yöntemi: köşegen bileşke vektörü verir.'},
+   {q:'Birim vektörün büyüklüğü?',opts:['0','0,5','1','Belirsiz'],ans:2,exp:'Birim vektör büyüklüğü = 1.'},
+   {q:'İki vektör ne zaman dik (ortogonal) olur?',opts:['Toplamları sıfır','Farkları sıfır','Skaler çarpımları sıfır','Büyüklükleri eşit'],ans:2,exp:'A·B = |A||B|cosθ = 0 → θ = 90° → dik.'},
+   {q:'6 m/s doğu + 8 m/s kuzey hızının bileşkesi?',opts:['2 m/s','10 m/s','14 m/s','48 m/s'],ans:1,exp:'√(36+64) = √100 = 10 m/s.'},
+   {q:'Bir vektörün tersi (negatifi) ne demektir?',opts:['Büyüklüğü sıfır','Aynı büyüklük, zıt yön','Yarı büyüklük, aynı yön','Sıfır vektör'],ans:1,exp:'-A: A ile aynı büyüklükte fakat zıt yönlü vektördür.'},
+   {q:'Vektörün y bileşeni hangisidir? (θ: x ekseniyle açı)',opts:['v·cosθ','v·sinθ','v·tanθ','v/sinθ'],ans:1,exp:'vᵧ = v·sinθ.'},
+   {q:'Konum vektörü neyi belirtir?',opts:['Hızı','Kütleyi','Başlangıç noktasına göre konumu','İvmeyi'],ans:2,exp:'Konum vektörü r, cismin referans noktasına göre yerini vektörel olarak gösterir.'},
+   {q:'30° açıyla 10 N kuvvetin yatay bileşeni? (cos30°≈0,87)',opts:['5 N','8,7 N','10 N','11,5 N'],ans:1,exp:'Fₓ = F·cos30° = 10×0,87 = 8,7 N.'},
+   {q:'Skaler büyüklüğün özelliği nedir?',opts:['Yönü var, büyüklüğü yok','Yalnızca büyüklüğü var','Her zaman pozitif','Her zaman negatif'],ans:1,exp:'Skaler: yalnızca sayısal büyüklük. Örnek: sıcaklık, kütle, enerji.'},
+   {q:'Üç boyutlu uzayda î, ĵ, k̂ vektörleri neyi temsil eder?',opts:['Koordinat eksenleri boyunca birim vektörler','Büyük kuvvetler','Kütle bileşenleri','Ivme yönleri'],ans:0,exp:'î, ĵ, k̂ sırasıyla x, y, z eksenlerindeki birim vektörlerdir.'},
+   {q:'İki aynı yönlü vektörün bileşkesinin büyüklüğü nasıl hesaplanır?',opts:['Çıkarılır','Toplanır','Çarpılır','Bölünür'],ans:1,exp:'Aynı yönlü vektörler: R = A + B.'},
+   {q:'Vektör çarpımı (çapraz çarpım) A×B sonucu?',opts:['Skaler','A ve B\'ye dik vektör','A yönünde vektör','B yönünde vektör'],ans:1,exp:'Çapraz çarpım A×B, hem A\'ya hem B\'ye dik bir vektör üretir. Büyüklüğü = |A||B|sinθ.'},
+  ],
+  fillBlanks:[
+   {sentence:'Kuvvet ___ bir büyüklüktür; hem büyüklüğü hem de ___ vardır.',blanks:['vektörel','yönü'],pool:['vektörel','skaler','yönü','birimi','kütlesi','rengi']},
+   {sentence:'Birbirine dik 3 N ve 4 N\'luk kuvvetlerin bileşkesi ___ N\'dur.',blanks:['5'],pool:['5','7','1','12','3','4']},
+   {sentence:'x bileşeni v·___ θ, y bileşeni v·___ θ formülleriyle bulunur.',blanks:['cos','sin'],pool:['cos','sin','tan','cot','sec','cosec']},
+  ],
+  matching:[
+   {pairs:[{l:'Skaler',r:'Kütle, sıcaklık, enerji'},{l:'Vektörel',r:'Kuvvet, hız, ivme'},{l:'Birim vektör',r:'Büyüklüğü 1 olan vektör'},{l:'Sıfır vektör',r:'Büyüklüğü 0 olan vektör'}]},
+  ],
+  trueFalse:[
+   {s:'Hız (velocity) vektörel bir büyüklüktür.',ans:true,exp:'Doğru. Hız hem büyüklük (sürat) hem yön içerir.'},
+   {s:'İki dik vektörün bileşkesi her zaman büyük olanına eşittir.',ans:false,exp:'Yanlış. √(A²+B²) formülü kullanılır.'},
+   {s:'Skaler çarpım (nokta çarpım) sonucu bir sayıdır.',ans:true,exp:'Doğru. A·B = |A||B|cosθ, skaler bir değerdir.'},
+   {s:'Birim vektörün büyüklüğü 0\'dır.',ans:false,exp:'Yanlış. Birim vektörün büyüklüğü tam olarak 1\'dir.'},
+  ]
+ },
+ {id:'force',week:3,icon:'💪',title:'Kuvvet',desc:'Newton yasaları, kuvvet türleri, sürtünme, ağırlık.',
+  questions:[
+   {q:'F = ma\'da F\'nin birimi?',opts:['Joule','Pascal','Newton (N)','Watt'],ans:2,exp:'F birimi = kg·m/s² = Newton (N).'},
+   {q:'5 kg, 10 m/s² → net kuvvet?',opts:['2 N','15 N','50 N','500 N'],ans:2,exp:'F = 5×10 = 50 N.'},
+   {q:'Newton 3. yasası ne der?',opts:['Her cisim hareketsiz durmak ister','Her etkiye eşit-zıt tepki','Kuvvet hıza eşit','Enerji korunur'],ans:1,exp:'Etki-tepki yasası: her etki kuvvetine eşit ve zıt tepki vardır.'},
+   {q:'Ağırlık formülü?',opts:['W=m/g','W=m+g','W=m·g','W=m²·g'],ans:2,exp:'W = mg. Yüzeyinde g ≈ 9,8 m/s².'},
+   {q:'μs (statik sürtünme) vs μk (kinetik)?',opts:['μs < μk','μs > μk','μs = μk','Bağımsız'],ans:1,exp:'μs > μk. Harekete başlatmak, sürdürmekten zordur.'},
+   {q:'Newton 1. yasası (eylemsizlik) ne söyler?',opts:['F=ma','Net kuvvet=0 ise hız değişmez','Etki=tepki','Enerji korunur'],ans:1,exp:'Bir cisim net kuvvet yoksa hız ve yönünü korur.'},
+   {q:'Normal kuvvet (N) yüzeye göre hangi yöndedir?',opts:['Yüzeye paralel','Yüzeye dik ve yüzeyden dışarı','Yere doğru','Harekete karşı'],ans:1,exp:'Normal kuvvet, yüzeye dik ve yüzeyden uzaklaşan yönde etki eder.'},
+   {q:'Eğik düzlemde cismin ağırlığının eğime paralel bileşeni? (θ: eğim açısı)',opts:['mg·cosθ','mg·sinθ','mg·tanθ','mg/sinθ'],ans:1,exp:'Eğime paralel bileşen = mg·sinθ; eğime dik bileşen = mg·cosθ.'},
+   {q:'Kütlesi 10 kg cismin ağırlığı? (g=10 m/s²)',opts:['10 N','100 N','1000 N','1 N'],ans:1,exp:'W = 10×10 = 100 N.'},
+   {q:'Sürtünme kuvveti formülü? (μ: katsayı, N: normal kuvvet)',opts:['f=μ/N','f=μ+N','f=μ·N','f=N/μ'],ans:2,exp:'Kinetik sürtünme: f = μk × N.'},
+   {q:'Germe kuvveti (tension) nedir?',opts:['İtme kuvveti','İp veya telle iletilen çekme kuvveti','Manyetik kuvvet','Yerçekimi'],ans:1,exp:'Germe (gerilim) kuvveti bir ip veya tel boyunca iletilen çekme kuvvetidir.'},
+   {q:'Kütle 0 kg → ağırlık nedir?',opts:['9,8 N','1 N','0 N','Sonsuz'],ans:2,exp:'W = mg = 0×g = 0 N. Kütlesi olmayan cismin ağırlığı sıfırdır.'},
+   {q:'Yatay zeminde itilen kutu 3 m/s²; masa kütlesi 20 kg. Net kuvvet?',opts:['23 N','17 N','60 N','6,67 N'],ans:2,exp:'F = ma = 20×3 = 60 N.'},
+   {q:'Hava direnci ne tür bir kuvvettir?',opts:['Yerçekimi','Elektriksel','Viskoz sürtünme','Manyetik'],ans:2,exp:'Hava direnci akışkan (viskoz) sürtünmesidir; hız artınca artar.'},
+   {q:'G = 6,67×10⁻¹¹ N·m²/kg² hangi sabittir?',opts:['Coulomb sabiti','Boltzmann sabiti','Evrensel gravite sabiti','Planck sabiti'],ans:2,exp:'G evrensel gravite sabitidir. Newton\'un gravite yasasında: F = Gm₁m₂/r².'},
+  ],
+  fillBlanks:[
+   {sentence:'Newton\'un ikinci yasasına göre F = ___ × ___ formülü kuvveti verir.',blanks:['m','a'],pool:['m','a','v','t','g','p']},
+   {sentence:'Ağırlık ___ ve yerçekimi ivmesinin çarpımına eşittir; birimi ___ \'dur.',blanks:['kütle','Newton'],pool:['kütle','Newton','kilogram','hız','metre','Joule']},
+   {sentence:'Statik sürtünme katsayısı kinetik katsayıdan ___ \'dür.',blanks:['büyük'],pool:['büyük','küçük','eşit','bağımsız']},
+  ],
+  matching:[
+   {pairs:[{l:'Newton 1. Yasa',r:'Eylemsizlik'},{l:'Newton 2. Yasa',r:'F = ma'},{l:'Newton 3. Yasa',r:'Etki-Tepki'},{l:'Sürtünme',r:'f = μN'}]},
+  ],
+  trueFalse:[
+   {s:'Newton\'un birinci yasasına göre net kuvvet sıfırsa cisim sabit hızla hareket eder.',ans:true,exp:'Doğru. Eylemsizlik yasası: net kuvvet yoksa durum değişmez.'},
+   {s:'Ağırlık ve kütle aynı şeydir.',ans:false,exp:'Yanlış. Kütle skaler (kg), ağırlık vektörel (N = kg·m/s²).'},
+   {s:'Statik sürtünme kuvveti uygulamanın tam zıttı yöndedir.',ans:true,exp:'Doğru. Statik sürtünme hareketi engelleme yönünde etki eder.'},
+   {s:'10 kg kütle her yerde aynı ağırlığa sahiptir.',ans:false,exp:'Yanlış. Ay\'da g daha küçük olduğundan ağırlık farklıdır; kütle sabittir.'},
+  ]
+ },
+ {id:'motion',week:4,icon:'🏃',title:'Hareket',desc:'Kinematik, hız, ivme, serbest düşme, eğik atış.',
+  questions:[
+   {q:'Hız-zaman grafiğinin eğimi neyi verir?',opts:['Yol','Hız','İvme','Kuvvet'],ans:2,exp:'Δv/Δt = ivme.'},
+   {q:'v₀=0, g=10, t=3 s → hız?',opts:['10 m/s','20 m/s','30 m/s','90 m/s'],ans:2,exp:'v = 0 + 10×3 = 30 m/s.'},
+   {q:'Düzgün dairesel harekette ivme yönü?',opts:['Teğet','Merkeze doğru','Merkezden kaçan','Sıfır'],ans:1,exp:'Merkezcil ivme merkeze doğrudur; a = v²/r.'},
+   {q:'Eğik atışta yatay ve düşey hareketler?',opts:['Birbirini etkiler','Bağımsız','Yalnızca yatay etkilenir','Senkronize'],ans:1,exp:'İkisi bağımsız; yatay: düzgün; düşey: g ivmeli.'},
+   {q:'v₀=0, g=10, t=2 s → düşme mesafesi?',opts:['10 m','20 m','40 m','5 m'],ans:1,exp:'h = ½×10×4 = 20 m.'},
+   {q:'Ortalama hız formülü?',opts:['v=Δx/Δt','v=Δt/Δx','v=F/m','v=ma'],ans:0,exp:'Ortalama hız = toplam yer değiştirme / geçen süre.'},
+   {q:'Düzgün hızlanmalı harekette v = v₀ + at ise t = 5 s, v₀=0, a=4 m/s² → v?',opts:['9 m/s','20 m/s','1,25 m/s','4 m/s'],ans:1,exp:'v = 0 + 4×5 = 20 m/s.'},
+   {q:'Konum-zaman grafiğinin eğimi neyi verir?',opts:['İvme','Hızı','Kuvveti','Momentumu'],ans:1,exp:'Konum-zaman grafiğinin eğimi anlık hızı verir.'},
+   {q:'Serbest düşmede havanın direnci ihmal edilirse cisimlerin düşme hızı?',opts:['Kütlelerine bağlı','Boyutlarına bağlı','Aynıdır','Şekillerine bağlı'],ans:2,exp:'Galileo: hava direnci yoksa tüm cisimler g ile düşer; kütle fark etmez.'},
+   {q:'45° fırlatılan cismin menzili en büyük olur çünkü?',opts:['Yatay hız max','Düşey hız max','Yatay × düşey hız çarpımı max','Sin(2×45°)=1 max'],ans:3,exp:'Menzil R = v²sin(2θ)/g. sin(90°) = 1 maksimum; θ = 45°.'},
+   {q:'İvme birimi nedir?',opts:['m/s','m/s²','N·s','kg·m/s'],ans:1,exp:'İvme = hız değişimi / süre = m/s² .'},
+   {q:'Hız-zaman grafiği altındaki alan neyi verir?',opts:['İvme','Hız','Yer değiştirme','Kuvvet'],ans:2,exp:'v-t grafiği altı alan = yer değiştirme (ör. trapez alanı).'},
+   {q:'Düşey atışta tepe noktasında düşey hız nedir?',opts:['Maksimum','Sıfır','Negatif','Başlangıç hızına eşit'],ans:1,exp:'Tepe noktasında düşey hız = 0; cisim o an yön değiştiriyor.'},
+   {q:'Fırlatma hızı v₀=20 m/s, yatay fırlatma. t=2 s\'deki yatay mesafe?',opts:['10 m','20 m','40 m','80 m'],ans:2,exp:'Yatay: x = v₀·t = 20×2 = 40 m (yatay ivme yok).'},
+   {q:'Eşit ivmeli harekette x = v₀t + ½at² formülündeki ½at² terimi neyi temsil eder?',opts:['Sabit hız katkısı','İvmenin yarısı','İvme nedeniyle ek yer değiştirme','Başlangıç hızı katkısı'],ans:2,exp:'½at² terimi ivmenin yol açtığı ekstra yer değiştirmedir.'},
+  ],
+  fillBlanks:[
+   {sentence:'Serbest düşmede v = ___ × t formülü kullanılır. (v₀=0)',blanks:['g'],pool:['g','m','F','a','v','t']},
+   {sentence:'Hız-zaman grafiğinin eğimi ___ , konum-zaman grafiğinin eğimi ___ verir.',blanks:['ivme','hız'],pool:['ivme','hız','kuvvet','enerji','momentum','güç']},
+  ],
+  matching:[
+   {pairs:[{l:'v = v₀ + at',r:'Hız-zaman ilişkisi'},{l:'x = v₀t + ½at²',r:'Konum-zaman ilişkisi'},{l:'v² = v₀² + 2ax',r:'Hız-yer değiştirme'},{l:'h = ½gt²',r:'Serbest düşme'}]},
+  ],
+  trueFalse:[
+   {s:'Düzgün dairesel harekette cismin hızının büyüklüğü sabittir.',ans:true,exp:'Doğru. Hız yönü değişir ama büyüklüğü sabit kalır.'},
+   {s:'Eğik atışta en büyük menzil 60° açıda elde edilir.',ans:false,exp:'Yanlış. Maksimum menzil 45°\'de elde edilir.'},
+   {s:'Serbest düşmede ivme yaklaşık 9,8 m/s²\'dir.',ans:true,exp:'Doğru. Yerçekimi ivmesi g ≈ 9,8 m/s².'},
+   {s:'Konum-zaman grafiğinin eğimi ivmeyi verir.',ans:false,exp:'Yanlış. Konum-zaman eğimi hız, hız-zaman eğimi ivme verir.'},
+  ]
+ },
+ {id:'momentum',week:5,icon:'🎱',title:'Momentum',desc:'Lineer momentum, impuls, çarpışmalar, korunum.',
+  questions:[
+   {q:'p = m×v formülü?',opts:['Enerji','Momentum','Kuvvet','Güç'],ans:1,exp:'p = mv, birimi kg·m/s.'},
+   {q:'Momentum ne zaman korunur?',opts:['Elastik çarpışma','Net dış kuvvet = 0','Enerji kaybolmadığında','Hız sabit'],ans:1,exp:'ΣF_dış = 0 → p korunur.'},
+   {q:'Elastik çarpışmada neler korunur?',opts:['Yalnızca p','Yalnızca KE','Hem p hem KE','Hiçbiri'],ans:2,exp:'Elastik çarpışmada p ve KE her ikisi de korunur.'},
+   {q:'İmpuls J = ?',opts:['m×a','F×t','m×g','v×t'],ans:1,exp:'J = F·Δt = Δp.'},
+   {q:'2 kg, 6 m/s → 4 kg (dur). Plastik çarpışma: ortak hız?',opts:['2 m/s','3 m/s','4 m/s','6 m/s'],ans:0,exp:'p=12; v=12/6=2 m/s.'},
+   {q:'1 kg top 5 m/s ilerliyor; momentumu?',opts:['0,2 kg·m/s','5 kg·m/s','25 kg·m/s','0,5 kg·m/s'],ans:1,exp:'p = 1×5 = 5 kg·m/s.'},
+   {q:'Tamamen plastik çarpışmada kinetik enerji?',opts:['Korunur','Artar','Kısmen kaybolur','Tamamen sıfır olur'],ans:2,exp:'Plastik çarpışmada KE kısmen ısı, ses vb. enerjiye dönüşür; yalnızca p korunur.'},
+   {q:'0,5 s boyunca 20 N kuvvet uygulanan cismin impuls değeri?',opts:['40 N·s','10 N·s','0,025 N·s','100 N·s'],ans:1,exp:'J = F·t = 20×0,5 = 10 N·s.'},
+   {q:'Momentum birimi alternatif olarak ne ile eşdeğerdir?',opts:['J/s','N·s','W·s','J·m'],ans:1,exp:'kg·m/s = N·s (Newton·saniye). İkisi eşdeğerdir.'},
+   {q:'Roket itişi (roket iticisi) hangi yasaya dayanır?',opts:['Newton 1','Newton 2','Newton 3 + momentum korunumu','Enerji korunumu'],ans:2,exp:'Roket: geri fırlayan gaz ve roketin toplam momentumu korunur; etki-tepki.'},
+   {q:'Araç çarpışma emniyet sistemlerinde impuls neden uzun tutulur?',opts:['Daha fazla kuvvet','Daha az kuvvet','Daha fazla hız','Enerji artışı'],ans:1,exp:'J = F·Δt = Δp sabit olduğundan Δt arttıkça F azalır → yaralanma riski düşer.'},
+   {q:'Hava yastığı ve emniyet kemeri hangi fizik ilkesine göre çalışır?',opts:['Enerji korunumu','İmpuls-momentum','Coulomb yasası','Faraday yasası'],ans:1,exp:'Çarpışma süresini uzatarak ortalama kuvveti azaltırlar (J = F·Δt).'},
+  ],
+  fillBlanks:[
+   {sentence:'Momentum p = ___ × ___ formülüyle, impuls J = ___ × Δt ile hesaplanır.',blanks:['m','v','F'],pool:['m','v','F','a','g','t','p']},
+   {sentence:'Elastik çarpışmada hem ___ hem de ___ korunur.',blanks:['momentum','kinetik enerji'],pool:['momentum','kinetik enerji','potansiyel enerji','ısı','güç','ivme']},
+  ],
+  matching:[
+   {pairs:[{l:'Elastik çarpışma',r:'p ve KE korunur'},{l:'Plastik çarpışma',r:'Yalnızca p korunur'},{l:'İmpuls',r:'F·Δt = Δp'},{l:'Momentum',r:'m·v'}]},
+  ],
+  trueFalse:[
+   {s:'Momentum vektörel bir büyüklüktür.',ans:true,exp:'Doğru. p = mv; hız vektörel olduğundan momentum da vektöreldir.'},
+   {s:'Tamamen elastik çarpışmada kinetik enerji korunmaz.',ans:false,exp:'Yanlış. Tam elastik çarpışmada KE korunur.'},
+   {s:'İmpuls ile momentum değişimi birbirine eşittir.',ans:true,exp:'Doğru. J = Δp; bu impuls-momentum teoreminin özüdür.'},
+   {s:'İzole sistemde toplam momentum artar.',ans:false,exp:'Yanlış. İzole sistemde (net dış kuvvet = 0) toplam momentum sabittir.'},
+  ]
+ },
+ {id:'equilibrium',week:6,icon:'⚖️',title:'Denge ve Moment',desc:'Statik denge, kaldıraç, moment, kütle merkezi.',
+  questions:[
+   {q:'Dengedeyken ΣF ve Στ?',opts:['İkisi max','İkisi sıfır','F=0, τ=max','F=max, τ=0'],ans:1,exp:'ΣF = 0 ve Στ = 0.'},
+   {q:'τ = r·F·sinθ — θ=90° ise moment?',opts:['Sıfır','r·F/2','r·F','r²·F'],ans:2,exp:'sin90°=1 → τ = r·F.'},
+   {q:'Homojen levhanın kütle merkezi?',opts:['Sol uç','Sağ uç','Geometrik merkez','Alt yüzey'],ans:2,exp:'Homojen cisimde KM = geometrik merkez.'},
+   {q:'10 N, 2 m kol → τ?',opts:['5 N·m','12 N·m','20 N·m','20 N/m'],ans:2,exp:'τ = 10×2 = 20 N·m.'},
+   {q:'Kaldıraç dengesinde F₁r₁ = ?',opts:['F₂/r₂','F₂+r₂','F₂r₂','F₂-r₂'],ans:2,exp:'F₁r₁ = F₂r₂ (momentler eşit).'},
+   {q:'Kütle merkezi neden önemlidir?',opts:['Renk belirler','Cismin dönmeden öteleme hareketi için uygulama noktası','Isı depolama','Hacim hesabı'],ans:1,exp:'KM\'ye uygulanan kuvvet cisme saf öteleme yaptırır; dönme olmaz.'},
+   {q:'3 m kolda 50 N kuvvetle oluşan moment?',opts:['53 N·m','47 N·m','150 N·m','17 N·m'],ans:2,exp:'τ = 50×3 = 150 N·m.'},
+   {q:'Denge için kaç koşul gereklidir?',opts:['1','2','3','4'],ans:1,exp:'İki koşul: ΣF = 0 (öteleme) ve Στ = 0 (dönme).'},
+   {q:'Düzensiz bir cismin kütle merkezi nasıl bulunur?',opts:['Sadece formülle','Yalnızca deneyle','İp asma yöntemi ya da integral','Renk analizi'],ans:2,exp:'Pratik: ipi farklı noktalardan ası; kesişim KM\'dir. Teorik: integral.'},
+   {q:'Ağırlık merkezi ile kütle merkezi ne zaman çakışır?',opts:['Her zaman','Hiçbir zaman','Yalnızca düzgün cisimlerde','g sabit olduğunda'],ans:3,exp:'g her yerde aynıysa ağırlık merkezi ile kütle merkezi çakışır.'},
+  ],
+  fillBlanks:[
+   {sentence:'Statik denge için hem net ___ hem de net ___ sıfır olmalıdır.',blanks:['kuvvet','moment'],pool:['kuvvet','moment','hız','ivme','enerji','momentum']},
+   {sentence:'Moment τ = ___ × ___ × sinθ formülüyle hesaplanır.',blanks:['r','F'],pool:['r','F','m','v','g','a']},
+  ],
+  matching:[
+   {pairs:[{l:'ΣF = 0',r:'Öteleme dengesi'},{l:'Στ = 0',r:'Dönme dengesi'},{l:'Kütle merkezi',r:'KM'},{l:'Kaldıraç',r:'F₁r₁ = F₂r₂'}]},
+  ],
+  trueFalse:[
+   {s:'Moment birimi Newton·metre\'dir.',ans:true,exp:'Doğru. τ = r × F → N·m.'},
+   {s:'Denge için yalnızca net kuvvetin sıfır olması yeterlidir.',ans:false,exp:'Yanlış. Hem ΣF = 0 hem Στ = 0 gereklidir.'},
+   {s:'Kütle merkezi cisme ait bir noktada olmak zorunda değildir.',ans:true,exp:'Doğru. Örneğin halkanın kütle merkezi halkayı dışarıdan bir noktadadır.'},
+  ]
+ },
+ {id:'energy',week:7,icon:'⚡',title:'İş, Güç ve Enerji',desc:'Mekanik iş, kinetik/potansiyel enerji, güç, dönüşümler.',
+  questions:[
+   {q:'W = F·d·cosθ — θ=90° ise iş?',opts:['F·d','Sıfır','F/d','d/F'],ans:1,exp:'cos90°=0 → W=0. Dik kuvvet iş yapmaz.'},
+   {q:'50 kg, 3 m yükseklik, g=10 → W?',opts:['150 J','500 J','1500 J','15000 J'],ans:2,exp:'W = mgh = 50×10×3 = 1500 J.'},
+   {q:'Güç birimi?',opts:['J²/s','J/s (W)','N·m/s²','kg·m/s'],ans:1,exp:'P = W/t = J/s = Watt.'},
+   {q:'KE = ?',opts:['mgh','½mv²','mv','Fv'],ans:1,exp:'Kinetik enerji = ½mv².'},
+   {q:'Enerji korunumu yasası?',opts:['Enerji yaratılabilir','Yok edilebilir','Toplam sabit','Yalnızca mekanik korunur'],ans:2,exp:'Enerji ne yaratılır ne yok edilir; dönüşür.'},
+   {q:'100 W\'lık bir cihaz 10 s\'de ne kadar enerji harcar?',opts:['10 J','100 J','1000 J','10000 J'],ans:2,exp:'E = P×t = 100×10 = 1000 J.'},
+   {q:'Potansiyel enerji EP = mgh iken h artarsa EP?',opts:['Azalır','Değişmez','Artar','Sıfır olur'],ans:2,exp:'h ile doğru orantılı: h ↑ → EP ↑.'},
+   {q:'Yayda depolanan enerji formülü? (k: yay sabiti, x: uzama)',opts:['kx','½kx²','kx²','2kx'],ans:1,exp:'Yay potansiyel enerjisi = ½kx².'},
+   {q:'Enerji verimliliği tanımı?',opts:['Faydalı enerji / toplam girdi × 100','Toplam enerji / faydalı enerji','Güç × zaman','Kuvvet × mesafe'],ans:0,exp:'Verimlilik = (faydalı çıktı / toplam girdi) × %100.'},
+   {q:'X-ışını tüpünde elektrik enerjisi neye dönüşür?',opts:['Yalnızca X-ışınına','Yalnızca ısıya','Çoğunlukla ısı (%99), az miktarda X-ışını (%1)','Eşit X-ışını ve ısı'],ans:2,exp:'X-ışını tüpünde %99 enerji ısıya, yalnızca ~%1\'i X-ışınına dönüşür; soğutma kritiktir.'},
+   {q:'MRI\'da depolanan enerji hangi formda bulunur?',opts:['Kinetik','Manyetik alan','Potansiyel (yerçekimi)','Kimyasal'],ans:1,exp:'MRI\'ın süperiletken bobinleri manyetik alanda enerji depolar.'},
+   {q:'1 kWh kaç Joule\'dür?',opts:['1000 J','36000 J','3600000 J','360 J'],ans:2,exp:'1 kWh = 1000 W × 3600 s = 3,6×10⁶ J.'},
+  ],
+  fillBlanks:[
+   {sentence:'İş W = F × d × ___ θ formülüyle hesaplanır ve birimi ___ \'dur.',blanks:['cos','Joule'],pool:['cos','sin','Joule','Newton','Watt','tan','metre']},
+   {sentence:'Kinetik enerji KE = ___ mv², potansiyel enerji EP = m × ___ × h\'dir.',blanks:['½','g'],pool:['½','g','2','F','v','t','a']},
+  ],
+  matching:[
+   {pairs:[{l:'Kinetik enerji',r:'½mv²'},{l:'Potansiyel enerji',r:'mgh'},{l:'Güç',r:'W/t'},{l:'İş',r:'F·d·cosθ'}]},
+  ],
+  trueFalse:[
+   {s:'Dik uygulanan kuvvet iş yapmaz.',ans:true,exp:'Doğru. W = F·d·cos90° = 0.'},
+   {s:'1 Watt = 1 Joule/dakika\'dır.',ans:false,exp:'Yanlış. 1 W = 1 J/s (saniye).'},
+   {s:'Enerji korunumu yasası evrenseldir.',ans:true,exp:'Doğru. Termodinamiğin 1. yasası olarak da bilinir.'},
+   {s:'X-ışını tüpünde enerjinin çoğu X-ışınına dönüşür.',ans:false,exp:'Yanlış. Yaklaşık %1\'i X-ışınına, %99\'u ısıya dönüşür.'},
+  ]
+ },
+ {id:'electrostatics',week:9,icon:'🔋',title:'Elektrostatik',desc:'Coulomb yasası, elektrik alanı, potansiyel, sığa.',
+  questions:[
+   {q:'Coulomb kuvveti mesafeyle?',opts:['r ile doğru','r² ile ters','r ile ters','Değişmez'],ans:1,exp:'F = kq₁q₂/r² → r² ile ters orantılı.'},
+   {q:'Elektrik alan birimi?',opts:['V','N/C veya V/m','A','F'],ans:1,exp:'E = F/q → N/C = V/m.'},
+   {q:'İletken içinde E?',opts:['Max','Min','Sıfır','Sabit'],ans:2,exp:'İletken içi E = 0 (Faraday kafesi).'},
+   {q:'Kapasitör enerjisi?',opts:['CV','½CV²','C/V','CV²'],ans:1,exp:'U = ½CV².'},
+   {q:'X-ışını tüpünde yüksek voltaj?',opts:['Elektron üretir','Elektronları hızlandırır','X-ışını soğurur','Soğutur'],ans:1,exp:'Yüksek V, elektronu hızlandırır → kinetik enerji → X-ışını.'},
+   {q:'Coulomb sabiti k ≈ ?',opts:['9×10⁹ N·m²/C²','6,67×10⁻¹¹','1,6×10⁻¹⁹','8,85×10⁻¹²'],ans:0,exp:'k ≈ 9×10⁹ N·m²/C². Elektrik kuvvetini büyütür.'},
+   {q:'Elektrik potansiyeli V\'nin birimi?',opts:['Ampere','Ohm','Volt','Watt'],ans:2,exp:'Elektrik potansiyeli Volt (V) = J/C ile ölçülür.'},
+   {q:'Farad (F) hangi büyüklüğün birimidir?',opts:['Direnç','Sığa (kapasitans)','İndüktans','Akım'],ans:1,exp:'Kapasitansın birimi Farad (F) = C/V.'},
+   {q:'İki paralel plaka kondansatörde elektrik alan plakalar arasında nasıldır?',opts:['Sıfır','Düzgün (uniform)','Artar','Azalır'],ans:1,exp:'Paralel plakalı kondansatörde E plakalar arasında düzgündür.'},
+   {q:'Defibrilatör hangi prensiple çalışır?',opts:['İndüksiyon','Kapasitörde depolanan enerji','Manyetik rezonans','Coulomb kuvveti'],ans:1,exp:'Defibrilatör yüklü kondansatör (½CV²) enerjisini kısa sürede boşaltır.'},
+   {q:'Elektrik alan çizgileri + yükten nasıl çıkar?',opts:['İçeri girer','Dışa çıkar (radyal)','Döngü oluşturur','Yatay çizgiler'],ans:1,exp:'Alan çizgileri pozitif yükten dışarı, negatif yüke doğru gider.'},
+   {q:'1 Coulomb kaç elektron yüküne eşittir? (e = 1,6×10⁻¹⁹ C)',opts:['6,25×10¹⁸','1,6×10¹⁹','9×10⁹','6×10²³'],ans:0,exp:'1 C = 1 / (1,6×10⁻¹⁹) ≈ 6,25×10¹⁸ elektron yükü.'},
+  ],
+  fillBlanks:[
+   {sentence:'Coulomb kuvveti F = k × ___ × ___ / r² formülüyle hesaplanır.',blanks:['q₁','q₂'],pool:['q₁','q₂','m₁','m₂','v','F','E']},
+   {sentence:'Kapasitörde depolanan enerji U = ___ C × V² formülüyle bulunur.',blanks:['½'],pool:['½','2','1','¼','¾','3']},
+  ],
+  matching:[
+   {pairs:[{l:'Coulomb yasası',r:'F = kq₁q₂/r²'},{l:'Elektrik alan',r:'E = F/q'},{l:'Potansiyel',r:'V = W/q'},{l:'Kapasitans',r:'C = Q/V'}]},
+  ],
+  trueFalse:[
+   {s:'İletken içinde elektrostatik dengede elektrik alan sıfırdır.',ans:true,exp:'Doğru. Serbest yükler yüzeye taşınır; iç alan sıfırlanır.'},
+   {s:'Coulomb kuvveti mesafe ile doğru orantılıdır.',ans:false,exp:'Yanlış. F ∝ 1/r² → ters kare ile değişir.'},
+   {s:'Defibrilatörler kapasitörde depolanan enerjiyi kullanır.',ans:true,exp:'Doğru. ½CV² enerjisi ani deşarjla kalp ritmi düzenlenir.'},
+  ]
+ },
+ {id:'electricity',week:10,icon:'🔌',title:'Elektrik ve Devreler',desc:'Ohm yasası, seri/paralel, güç hesabı.',
+  questions:[
+   {q:'Ohm yasası?',opts:['V=I²R','V=IR','V=I/R','V=R/I'],ans:1,exp:'V = I·R.'},
+   {q:'Seri direnç toplam?',opts:['1/R=1/R₁+1/R₂','R=R₁×R₂','R=R₁+R₂','R=R₁-R₂'],ans:2,exp:'Seri: R_top = R₁+R₂+…'},
+   {q:'Paralel direnç toplam?',opts:['R=R₁+R₂','1/R=1/R₁+1/R₂','R=R₁×R₂','R=R₁-R₂'],ans:1,exp:'Paralel: 1/R_top = 1/R₁+1/R₂+…'},
+   {q:'Elektrik güç formülü?',opts:['P=V/I','P=V·I','P=V+I','P=V-I'],ans:1,exp:'P = V·I = I²R = V²/R.'},
+   {q:'10 Ω, 5 A → gerilim?',opts:['2 V','15 V','50 V','500 V'],ans:2,exp:'V = 5×10 = 50 V.'},
+   {q:'Kirchhoff\'un akım yasası (KCL) ne der?',opts:['Devrede gerilim sabittir','Düğüme giren akım toplamı = çıkan','Direnç sabit kalır','Güç korunur'],ans:1,exp:'KCL: Bir düğüme giren akımlar toplamı = çıkan akımlar toplamı.'},
+   {q:'Kirchhoff\'un gerilim yasası (KVL) ne der?',opts:['Düğümdeki akımlar sıfır','Kapalı çevrede gerilimler toplamı = 0','Direnç yük bağlıdır','Akım sabit'],ans:1,exp:'KVL: Kapalı bir devrede (çevrimde) gerilim düşümleri toplamı = 0.'},
+   {q:'3 Ω ve 6 Ω paralel bağlı → toplam direnç?',opts:['9 Ω','2 Ω','0,5 Ω','18 Ω'],ans:1,exp:'1/R = 1/3 + 1/6 = 1/2 → R = 2 Ω.'},
+   {q:'12 V, 4 Ω\'luk direnç üzerindeki akım?',opts:['48 A','0,33 A','3 A','8 A'],ans:2,exp:'I = V/R = 12/4 = 3 A.'},
+   {q:'Alternatif akım (AC) nedir?',opts:['Sabit yönde akan akım','Yön ve büyüklüğü periyodik değişen akım','Yalnızca yön değişen akım','Yüksek frekanslı sabit akım'],ans:1,exp:'AC: hem büyüklüğü hem yönü periyodik olarak değişen akım. Şebeke akımı.'},
+   {q:'RMS (etkin değer) voltaj peak voltajına nasıl bağlıdır?',opts:['Vrms = Vpeak','Vrms = Vpeak/√2','Vrms = Vpeak/2','Vrms = Vpeak×√2'],ans:1,exp:'Vrms = Vpeak/√2 ≈ 0,707×Vpeak. Türkiye\'de 220 V rms şebeke gerilimi.'},
+   {q:'5 Ω dirençten 2 A akım geçiyor. Harcanan güç?',opts:['2,5 W','10 W','20 W','25 W'],ans:2,exp:'P = I²R = 4×5 = 20 W.'},
+  ],
+  fillBlanks:[
+   {sentence:'Ohm yasasına göre V = ___ × ___ ; seri devrede R_top = R₁ + ___ .',blanks:['I','R','R₂'],pool:['I','R','R₁','R₂','V','P','G']},
+   {sentence:'Elektrik gücü P = V × ___ = ___ × R formülüyle hesaplanır.',blanks:['I','I²'],pool:['I','I²','V','R','V²','F','m']},
+  ],
+  matching:[
+   {pairs:[{l:'Ohm yasası',r:'V = IR'},{l:'KCL',r:'ΣI_giren = ΣI_çıkan'},{l:'KVL',r:'ΣV = 0 (kapalı çevrim)'},{l:'Güç',r:'P = VI'}]},
+  ],
+  trueFalse:[
+   {s:'Seri devrede tüm elemanlardan aynı akım geçer.',ans:true,exp:'Doğru. Seri devrede akım tektir; aynı akım tüm elemanlardan geçer.'},
+   {s:'Paralel devrede tüm elemanlardaki gerilim aynıdır.',ans:true,exp:'Doğru. Paralel devrede gerilim tüm dallarda eşittir.'},
+   {s:'Direnç azalırsa Ohm yasasına göre akım azalır (V sabit).',ans:false,exp:'Yanlış. I = V/R → R azalırsa I artar.'},
+  ]
+ },
+ {id:'magnetism',week:11,icon:'🧲',title:'Manyetik Alan',desc:'Manyetik kuvvet, Lorentz, Ampere, MRI temelleri.',
+  questions:[
+   {q:'Manyetik alanın kaynağı nedir?',opts:['Yalnızca mıknatıslar','Sabit yükler','Hareket eden yükler (akım)','Durgun yükler'],ans:2,exp:'Manyetik alan hareket eden yükler (akım) tarafından oluşturulur.'},
+   {q:'Manyetik alan SI birimi?',opts:['Volt','Ampere','Tesla (T)','Gauss'],ans:2,exp:'SI birimi Tesla (T) = Wb/m².'},
+   {q:'MRI prensibi?',opts:['X-ışını soğurması','Nükleer manyetik rezonans','Gama emisyonu','Ultrason'],ans:1,exp:'MRI: güçlü B + RF dalgası → H protonlarının NMR\'ı.'},
+   {q:'Lorentz kuvveti F = qvB·sinθ — θ=0° ise F?',opts:['Max','qvB','Sıfır','qvB/2'],ans:2,exp:'sin0°=0 → F=0. Alana paralel hareket eden yüke kuvvet yok.'},
+   {q:'Düz iletken çevresi manyetik alan geometrisi?',opts:['Düz çizgiler','Eşmerkezli daireler','Sarmal','Rastgele'],ans:1,exp:'Ampere yasası: düz iletken çevresi eşmerkezli daireler.'},
+   {q:'Sağ el kuralı ne için kullanılır?',opts:['Yük işareti','Manyetik kuvvet yönü','Elektrik alan yönü','Potansiyel hesabı'],ans:1,exp:'Sağ el kuralı: akım ve manyetik alan bilindiklerinde kuvvet yönünü verir.'},
+   {q:'MRI\'da kullanılan tipik manyetik alan şiddeti?',opts:['0,001 T','0,01 T','1,5 – 3 T','100 T'],ans:2,exp:'Klinik MRI sistemleri genellikle 1,5 T ve 3 T\'lık alanlarda çalışır.'},
+   {q:'Manyetik alan çizgilerinin özelliği hangisidir?',opts:['Kaynakta başlar, batıkta biter','Kapalı eğrilerdir','Daima düz çizgilerdir','Elektrik alan çizgileriyle aynıdır'],ans:1,exp:'Manyetik alan çizgileri kapalı eğrilerdir; manyetik monopol yoktur.'},
+   {q:'Elektromanyetin çalışma prensibi?',opts:['Statik yükler','Akım geçince manyetik alan oluşması','Isı etkisi','Kimyasal reaksiyon'],ans:1,exp:'Elektromıknatıs: bobin içinden akım geçince manyetik alan oluşur.'},
+   {q:'Hall etkisi ne için kullanılır?',opts:['Voltaj ölçümü','Manyetik alan ölçümü','Akım üretimi','Direnç ölçümü'],ans:1,exp:'Hall etkisi ile iletken üzerindeki gerilim ölçülerek B hesaplanır.'},
+  ],
+  fillBlanks:[
+   {sentence:'Manyetik kuvvet F = q × ___ × B × sinθ formülüyle, manyetik alan SI birimi ___ \'dır.',blanks:['v','Tesla'],pool:['v','Tesla','Volt','a','F','Gauss','m','Ampere']},
+  ],
+  matching:[
+   {pairs:[{l:'Lorentz kuvveti',r:'F = qvBsinθ'},{l:'MRI',r:'Nükleer manyetik rezonans'},{l:'Tesla (T)',r:'Manyetik alan birimi'},{l:'Ampere yasası',r:'Akım → çevresel B'}]},
+  ],
+  trueFalse:[
+   {s:'Manyetik alan çizgileri kapalı eğriler oluşturur.',ans:true,exp:'Doğru. Manyetik monopol olmadığından alan çizgileri kapanır.'},
+   {s:'Manyetik kuvvet yüke paralel hareket ettiğinde maksimuma ulaşır.',ans:false,exp:'Yanlış. F = qvBsinθ; θ=0 (paralel) → F=0; θ=90° → F max.'},
+   {s:'MRI vücuda zararlı iyonize radyasyon kullanır.',ans:false,exp:'Yanlış. MRI manyetik alan ve radyo dalgası kullanır; iyonize radyasyon içermez.'},
+  ]
+ },
+ {id:'electromag',week:12,icon:'📡',title:'Elektromanyetizma',desc:'Faraday-Lenz, transformatör, EM dalgalar.',
+  questions:[
+   {q:'Faraday yasası: EMK neye bağlı?',opts:['B büyüklüğüne','Manyetik akı değişim hızına','Akım büyüklüğüne','Yük miktarına'],ans:1,exp:'EMK = -dΦ/dt; akı değişim hızıyla orantılı.'},
+   {q:'Lenz yasası ne der?',opts:['İndüklenen akım sabit yönde','İndüklenen akım değişimi engeller','EMK her zaman sıfır','Akı her zaman artar'],ans:1,exp:'Lenz: indüklenen akım, onu yaratan akı değişimine karşı koyar.'},
+   {q:'Transformatör gerilim oranı?',opts:['Akım oranına','Sarım sayısı oranına','Direnç oranına','Frekansa'],ans:1,exp:'V₁/V₂ = N₁/N₂.'},
+   {q:'EM dalgaların boşluktaki hızı?',opts:['3×10³','3×10⁶','3×10⁸','3×10¹⁰'],ans:2,exp:'c ≈ 3×10⁸ m/s.'},
+   {q:'Tıbbi görüntülemede en yaygın EM dalga?',opts:['Kızılötesi','Mikrodalga','X-ışını','Mor ötesi'],ans:2,exp:'X-ışını maddeyi delme gücüyle radyolojide kullanılır.'},
+   {q:'Yükselteç (step-up) transformatörde N₂ > N₁ ise V₂?',opts:['V₁\'den küçük','V₁\'e eşit','V₁\'den büyük','Sıfır'],ans:2,exp:'V₂ = V₁ × (N₂/N₁); N₂>N₁ → V₂>V₁.'},
+   {q:'EM dalgalar yayılmak için ortama ihtiyaç duyar mı?',opts:['Evet','Hayır, boşlukta yayılır','Yalnızca havada','Yalnızca sıvıda'],ans:1,exp:'EM dalgalar boşlukta c = 3×10⁸ m/s hızında yayılır; ortam gerekmez.'},
+   {q:'Faraday kafesi ne işe yarar?',opts:['Isıyı tutar','Elektrik alanı engeller','Manyetik alanı yok eder','Sesi yalıtır'],ans:1,exp:'Faraday kafesi iletken bir kutu; içindeki E=0 → elektronik cihazları dış alandan korur.'},
+   {q:'Öz indüktans (self-inductance) birimi?',opts:['Farad','Henry (H)','Ohm','Tesla'],ans:1,exp:'Öz indüktans birimi Henry (H).'},
+   {q:'Radyo dalgaları ile X-ışınları arasındaki temel fark?',opts:['Hız','Madde kaynağı','Frekans ve dalga boyu','Polarizasyon'],ans:2,exp:'Her ikisi de EM dalgadır ama X-ışını çok daha yüksek frekans/düşük dalga boyuna sahip.'},
+  ],
+  fillBlanks:[
+   {sentence:'Transformatörde V₁/V₂ = ___ / N₂ oranı geçerlidir ve EM dalgalar boşlukta ___ m/s hızında yayılır.',blanks:['N₁','3×10⁸'],pool:['N₁','N₂','3×10⁸','3×10³','V₁','c','f']},
+  ],
+  matching:[
+   {pairs:[{l:'Faraday yasası',r:'EMK = -dΦ/dt'},{l:'Lenz yasası',r:'Değişime karşı koy'},{l:'Transformatör',r:'V₁/V₂ = N₁/N₂'},{l:'EM dalga hızı',r:'3×10⁸ m/s'}]},
+  ],
+  trueFalse:[
+   {s:'Yükselteç transformatörde gerilim artar, akım azalır.',ans:true,exp:'Doğru. P = VI sabit → V artarsa I azalır.'},
+   {s:'EM dalgalar yayılmak için maddesel ortama ihtiyaç duyar.',ans:false,exp:'Yanlış. EM dalgalar boşlukta yayılabilir.'},
+   {s:'Lenz yasası enerji korunumunun bir sonucudur.',ans:true,exp:'Doğru. Aksi hâlde enerji korunumu çiğnenirdi.'},
+  ]
+ },
+ {id:'radiation',week:13,icon:'☢️',title:'Radyasyon: Tanım ve Türleri',desc:'İyonize radyasyon, α, β, γ, X-ışını, nötron.',
+  questions:[
+   {q:'İyonlaştırıcı radyasyon ne yapar?',opts:['Yalnızca ısıtır','Atom iyonize eder','Yalnızca UV','Görünür ışık'],ans:1,exp:'İyonize radyasyon atomlardan elektron koparabilir.'},
+   {q:'Alfa parçacığı yapısı?',opts:['2p+2n (He-4)','1 elektron','1p+1n','Foton'],ans:0,exp:'α = He-4 çekirdeği; 2 proton, 2 nötron.'},
+   {q:'Gamma ışınları nedir?',opts:['+yüklü parçacık','-yüklü','Yüksek enerjili EM foton','Nötron'],ans:2,exp:'γ: nükleer geçişten yüksek enerjili foton; yüksüz.'},
+   {q:'Nüfuz gücü en yüksek radyasyon?',opts:['Alfa','Beta','Gamma/X-ışını','Infrared'],ans:2,exp:'Nüfuz: γ > β > α.'},
+   {q:'PET\'de kullanılan radyasyon?',opts:['Alfa','Beta+ (pozitron)','Nötron','Kızılötesi'],ans:1,exp:'PET: β⁺ yayıcı izotop → pozitron + e⁻ → 2×511 keV γ.'},
+   {q:'Beta eksi (β⁻) nedir?',opts:['Proton','Nötron','Yüksek enerjili elektron','Pozitron'],ans:2,exp:'β⁻: çekirdekten yüksek enerjili elektron yayımı. Nötron → proton + e⁻ + anti-nötrino.'},
+   {q:'Pozitron nedir?',opts:['Elektronun ağır versiyonu','Elektronun antimaddesi (+yüklü)','Proton','Nötron'],ans:1,exp:'Pozitron: elektron kütlesinde, +e yüklü antimadde parçacığı.'},
+   {q:'Gama ışınlarına karşı en etkili zırhlama malzemesi?',opts:['Kağıt','Ahşap','Alüminyum','Kurşun veya beton'],ans:3,exp:'Yüksek Z\'li kurşun ve kalın beton γ zırhlama için en etkilidir.'},
+   {q:'X-ışınları ile gama ışınları arasındaki temel fark?',opts:['Frekansları','Hızları','Üretim yerleri (X: elektron, γ: çekirdek)','Polarizasyonları'],ans:2,exp:'X-ışını: elektronik geçiş (karakteristik) veya bremsstrahlung. Gama: nükleer geçiş.'},
+   {q:'İyonlaştırıcı radyasyon canlıda ne tür hasar oluşturur?',opts:['Yalnızca ısı','DNA hasarı ve iyonizasyon','Ses dalgası','Mekanik hasar'],ans:1,exp:'İyonize radyasyon DNA\'da kırılma, iyonizasyon ve hücre hasarı oluşturur.'},
+   {q:'SPECT görüntülemede hangi ışın kullanılır?',opts:['X-ışını','Gama ışını','Alfa','Beta'],ans:1,exp:'SPECT: vücuda verilen γ yayıcı izotoplardan çıkan gama ışınları dedektörlerle saptanır.'},
+   {q:'Nötron radyasyonunun özelliği?',opts:['Pozitif yüklü','Negatif yüklü','Yüksüz, yüksek nüfuz gücü','Yüklü, düşük nüfuz'],ans:2,exp:'Nötron yüksüz olduğundan çok yüksek nüfuz gücüne sahiptir; nötron aktivasyonuna yol açar.'},
+  ],
+  fillBlanks:[
+   {sentence:'Alfa parçacığı ___ proton ve ___ nötrondan oluşur.',blanks:['2','2'],pool:['1','2','3','4','0']},
+   {sentence:'Gama ışınları yüksek enerjili elektromanyetik ___ \'lardır ve ___ yüke sahip değillerdir.',blanks:['foton','elektrik'],pool:['foton','proton','elektrik','manyetik','nötron','elektron']},
+  ],
+  matching:[
+   {pairs:[{l:'Alfa (α)',r:'He-4 çekirdeği'},{l:'Beta eksi (β⁻)',r:'Hızlı elektron'},{l:'Gamma (γ)',r:'Yüksek enerjili foton'},{l:'Pozitron (β⁺)',r:'Anti-elektron'}]},
+  ],
+  trueFalse:[
+   {s:'Alfa radyasyonu cilde uygulanan ince bir kağıtla durdurulabilir.',ans:true,exp:'Doğru. Alfa nüfuz gücü düşük; kağıt veya birkaç cm hava yeterlidir.'},
+   {s:'Gamma ışınları yüklü parçacıklardır.',ans:false,exp:'Yanlış. Gama fotonları yüksüz EM dalgadır.'},
+   {s:'PET görüntülemede pozitron kullanılır.',ans:true,exp:'Doğru. β⁺ yayıcı izotop → pozitron → yıkışma → 2×511 keV γ çifti.'},
+   {s:'Nötron radyasyonu yüklü olduğu için kolayca durdurulur.',ans:false,exp:'Yanlış. Nötron yüksüz olduğundan çok yüksek nüfuz gücüne sahiptir.'},
+  ]
+ },
+ {id:'interaction',week:14,icon:'💥',title:'Radyasyonun Madde ile Etkileşmesi',desc:'Fotoelektrik, Compton, çift oluşumu, HVL, ters-kare.',
+  questions:[
+   {q:'30-150 keV\'de baskın etkileşim?',opts:['Fotoelektrik (<30 keV)','Compton saçılması','Çift oluşumu','Rayleigh'],ans:1,exp:'30–150 keV: Compton baskın.'},
+   {q:'Fotoelektrik etkide ne olur?',opts:['Foton+e saçılır','Foton soğurulur, fotoelektron kopar','Foton ikiye ayrışır','Proton kopar'],ans:1,exp:'Fotoelektrik: foton tamamen soğurulur, iç kabuk e⁻ (fotoelektron) kopar.'},
+   {q:'Çift oluşumu minimum foton enerjisi?',opts:['0,511 MeV','1,022 MeV','0,1 MeV','10 MeV'],ans:1,exp:'e⁻ + e⁺ = 2×0,511 MeV → min 1,022 MeV.'},
+   {q:'HVL nedir?',opts:['Radyasyonu tamamen durduran','Yoğunluğu ½\'ye indiren kalınlık','Min. geçilemeyen kalınlık','Max nüfuz derinliği'],ans:1,exp:'HVL: yoğunluğu başlangıcın ½\'sine indiren zırh kalınlığı.'},
+   {q:'X-ışını şiddeti mesafeyle?',opts:['r ile doğru','r² ile ters (ters-kare)','Değişmez','Önce artar'],ans:1,exp:'I ∝ 1/r². 2r → I/4.'},
+   {q:'Compton saçılmasında ne meydana gelir?',opts:['Foton tamamen soğurulur','Foton dış elektron ile çarpışır, enerji kaybeder ve yön değiştirir','Çift oluşur','Nükleer reaksiyon'],ans:1,exp:'Compton: foton + dış e⁻ → saçılan foton (düşük E) + geri tepen e⁻.'},
+   {q:'Rayleigh saçılması (koherent) hangi durumda önemlidir?',opts:['Yüksek enerjilerde','Çok düşük enerjilerde (<20 keV)','Megavolt aralığında','Nötronlarda'],ans:1,exp:'Rayleigh saçılması düşük enerjide tüm atomla gerçekleşir; foton enerji kaybetmez.'},
+   {q:'Zırhlama materyalinin Z (atom numarası) değeri fotoelektrik etkiyi nasıl etkiler?',opts:['Etkilemez','Z³-⁴ ile orantılı artar','Azalır','Sadece enerjiyle ilgili'],ans:1,exp:'Fotoelektrik olasılığı Z³⁻⁴ ile orantılı artar; kurşun (Z=82) çok etkili.'},
+   {q:'Çift oluşumu sonrasında pozitron ne yapar?',opts:['Stabil kalır','Elektron ile yıkışarak 2×511 keV γ üretir','Nükleer reaksiyona girer','Kaybolur'],ans:1,exp:'Pozitron çevredeki elektron ile yıkışır (annihilation) → 2 adet 511 keV gama fotonu.'},
+   {q:'Lineer zayıflama katsayısı (μ) büyüdükçe?',opts:['HVL büyür','HVL küçülür','HVL değişmez','Radyasyon artar'],ans:1,exp:'HVL = ln2/μ = 0,693/μ. μ büyüdükçe HVL küçülür; madde radyasyonu daha iyi soğurur.'},
+   {q:'Radyasyon dedektöründe iyonizasyon odasının çalışma prensibi?',opts:['Işık yayımı','İyonize edilen havanın akım iletmesi','Manyetik alan değişimi','Ses dalgası'],ans:1,exp:'İyon odası: radyasyon hayadaki gazı iyonize eder; oluşan iyon çiftleri akım oluşturur.'},
+   {q:'Floroskopi için kullanılan X-ışını enerjisi yaklaşık nedir?',opts:['10 keV','50-100 kVp','5 MeV','500 MeV'],ans:1,exp:'Floroskopi genellikle 50-100 kVp aralığında çalışır; Compton ve fotoelektrik baskındır.'},
+  ],
+  fillBlanks:[
+   {sentence:'HVL = 0,693 / ___ formülüyle hesaplanır ve X-ışını şiddeti mesafe ile I ∝ 1/___ yasasına göre değişir.',blanks:['μ','r²'],pool:['μ','r²','r','E','Z','λ','N']},
+   {sentence:'Fotoelektrik etkide foton ___ soğurulur ve ___ kopar.',blanks:['tamamen','fotoelektron'],pool:['tamamen','kısmen','fotoelektron','proton','nötron','foton','gama']},
+  ],
+  matching:[
+   {pairs:[{l:'Fotoelektrik etki',r:'Foton soğurulur, e⁻ kopar'},{l:'Compton saçılması',r:'Foton + e⁻ → saçılma'},{l:'Çift oluşumu',r:'Foton → e⁻ + e⁺'},{l:'HVL',r:'Yoğunluğu ½\'ye indiren kalınlık'}]},
+  ],
+  trueFalse:[
+   {s:'Compton saçılmasında foton tamamen soğurulur.',ans:false,exp:'Yanlış. Compton\'da foton enerji kaybederek saçılır; tamamen soğurulmaz.'},
+   {s:'X-ışını şiddeti mesafenin karesiyle ters orantılı azalır.',ans:true,exp:'Doğru. Ters-kare yasası: I ∝ 1/r².'},
+   {s:'HVL ne kadar küçükse malzeme o kadar iyi zırhlama yapar.',ans:true,exp:'Doğru. Küçük HVL → μ büyük → malzeme radyasyonu hızla soğurur.'},
+   {s:'Çift oluşumu 0,5 MeV\'lik fotonlarla gerçekleşebilir.',ans:false,exp:'Yanlış. Minimum 1,022 MeV (iki elektron dinlenme enerjisi) gereklidir.'},
+  ]
+ },
+];
+
+const WEEK_TOPICS = {
+  1:['units'], 2:['vectors'], 3:['force'], 4:['motion'],
+  5:['momentum'], 6:['equilibrium'], 7:['energy'],
+  8:['arasinav'],
+  9:['electrostatics'], 10:['electricity'], 11:['magnetism'],
+  12:['electromag'], 13:['radiation'], 14:['interaction'],
+  15:['final']
+};
+const EXAM_WEEKS = {
+  8: { id:'arasinav', icon:'📝', title:'Ara Sınav', week:8,
+       desc:'Bu hafta ara sınav haftasıdır. Çalışmalarınızda başarılar!',
+       topics:['units','vectors','force','motion','momentum','equilibrium','energy'] },
+  15:{ id:'final',    icon:'🎓', title:'Final Sınavı', week:15,
+       desc:'Bu hafta final sınavı haftasıdır. Tüm konuları gözden geçirin!',
+       topics:['electrostatics','electricity','magnetism','electromag','radiation','interaction'] }
+};
+
+// ════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════
+let S = {
+  program:null, course:null, student:null,
+  scores:{},    // topicId → {mcq:{c,t,d}, fill:{c,t,d}, match:{c,t,d}, tf:{c,t,d}}
+  earnedBadges:[],
+  aiAskCount:0,
+  view:'dashboard', currentTopic:null, currentQ:0, answers:[],
+  activityType:'mcq',
+  prevLevel:null,
+  sampleCap:null,
+};
+let db = null;
+
+(async()=>{
+  try{db = await claude.use('db');}catch(e){}
+  try{S.sampleCap = await claude.use('sample');}catch(e){}
+  if(DEMO_MODE){
+    S.program='tgt';
+    S.course={code:'TS 109',name:'Temel Fizik',icon:'⛛️',active:true};
+    S.student={name:'Misafir',id:'demo_guest',key:'tgt_TS109',studentNo:'demo'};
+    buildTopicNav();
+    showView('dashboard');
+  }
+})();
+
+// ════════════════════════════════════════════
+// SCREENS
+// ════════════════════════════════════════════
+function goTo(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+
+function selectProgram(p){
+  S.program=p;
+  const prog=PROGRAMS[p];
+  document.getElementById('courseProgramTitle').textContent=prog.name;
+  document.getElementById('courseProgramBadge').textContent=prog.icon+' '+prog.name;
+  const list=document.getElementById('courseList');list.innerHTML='';
+  prog.courses.forEach(c=>{
+    const d=document.createElement('div');
+    d.className='course-item'+(c.active?'':' locked');
+    d.innerHTML=`<span class="ci-code">${c.code}</span><span class="ci-name">${c.icon} ${c.name}</span><span>${c.active?'→':'<span class="coming-soon">yakında</span>'}</span>`;
+    if(c.active)d.onclick=()=>selectCourse(c);
+    list.appendChild(d);
+  });
+  goTo('scrCourse');
+}
+
+function selectCourse(c){
+  S.course=c;
+  document.getElementById('loginCourseInfo').innerHTML=`<div class="ci-icon">${c.icon}</div><div><div class="ci-code">${c.code}</div><div class="ci-name">${c.name}</div></div>`;
+  document.getElementById('adminCourseLabel').textContent=`${S.program?.toUpperCase()} › ${c.code} ${c.name}`;
+  goTo('scrLogin');
+}
+
+// ════════════════════════════════════════════
+// LOGIN
+// ════════════════════════════════════════════
+async function doLogin(){
+  // Demo: program ve ders sabit
+  if(DEMO_MODE){ S.program='tgt'; S.course={code:'TS 109',name:'Temel Fizik',icon:'⚛️',active:true}; }
+  const name=document.getElementById('loginName').value.trim();
+  const pwd=document.getElementById('loginPwd').value.trim();
+  const err=document.getElementById('loginError');
+  const btn=document.getElementById('loginBtn');
+  err.style.display='none';
+  if(!name||!pwd){err.textContent='Ad-soyadınızı ve şifrenizi girin.';err.style.display='block';return;}
+  btn.disabled=true;btn.textContent='Kontrol ediliyor…';
+  const key=getCourseKey();
+  let matched=null;
+  if(db){
+    try{
+      const snap=await db.collection(`courses/${key}/students`).get();
+      for(const doc of snap.docs){
+        const d=doc.data();
+        if(!d)continue;
+        if((d.name||'').toLowerCase().trim()===name.toLowerCase().trim()&&d.pwd===pwd){
+          matched={name:d.name,id:doc.id,key,studentNo:d.studentNo};break;
+        }
+      }
+    }catch(e){err.textContent='Bağlantı hatası: '+(e.message||e);err.style.display='block';btn.disabled=false;btn.textContent='Derse Gir →';return;}
+  } else {err.textContent='Veritabanı bağlantısı kurulamadı.';err.style.display='block';btn.disabled=false;btn.textContent='Derse Gir →';return;}
+  btn.disabled=false;btn.textContent='Derse Gir →';
+  if(!matched){err.textContent='Ad-soyad veya şifre hatalı.';err.style.display='block';return;}
+  S.student=matched;
+  await loadStudentData();
+  launchApp();
+}
+
+function studentLogout(){S.student=null;S.scores={};S.earnedBadges=[];S.aiAskCount=0;goTo('scrLogin');document.getElementById('loginName').value='';document.getElementById('loginPwd').value='';}
+
+// ════════════════════════════════════════════
+// ADMIN
+// ════════════════════════════════════════════
+function doAdminLogin(){
+  const pwd=document.getElementById('adminPwd').value;
+  const err=document.getElementById('adminError');
+  if(pwd===ADMIN_PASSWORD){err.style.display='none';loadAdminPanel();goTo('scrAdmin');}
+  else{err.style.display='block';}
+}
+function adminLogout(){goTo('scrLogin');document.getElementById('adminPwd').value='';}
+function getCourseKey(){return(S.program||'tgt')+'_'+((S.course?.code||'TS109').replace(/\s/g,''));}
+function genPassword(){const c='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';let p='';for(let i=0;i<7;i++)p+=c[Math.floor(Math.random()*c.length)];return p;}
+
+async function addStudent(){
+  const name=document.getElementById('newStudentName').value.trim();
+  const no=document.getElementById('newStudentNo').value.trim();
+  if(!name||!no){showToast('Ad soyad ve öğrenci no gerekli.','err');return;}
+  const pwd=genPassword();
+  const key=getCourseKey();
+  const docId=no+'_'+Date.now();
+  if(db){try{await db.doc(`courses/${key}/students/${docId}`).set({name,studentNo:no,pwd,active:true,scores:{},badges:[],createdAt:new Date().toISOString()});}catch(e){showToast('Veritabanı hatası.','err');return;}}
+  const pd=document.getElementById('pwdDisplay');
+  document.getElementById('pwdVal').textContent=pwd;
+  document.getElementById('pwdSub').textContent=`${name} (No: ${no}) — Bu şifreyi öğrenciye iletin.`;
+  pd.style.display='block';
+  document.getElementById('newStudentName').value='';document.getElementById('newStudentNo').value='';
+  showToast('Öğrenci eklendi!','ok');loadAdminPanel();
+}
+
+async function loadAdminPanel(){
+  const key=getCourseKey();
+  const body=document.getElementById('studentTableBody');
+  body.innerHTML='<div class="empty-table"><span class="loading">Yükleniyor…</span></div>';
+  if(!db){body.innerHTML='<div class="empty-table">Veritabanı yok.</div>';return;}
+  try{
+    const snap=await db.collection(`courses/${key}/students`).get();
+    const students=[];
+    for(const doc of snap.docs)students.push({id:doc.id,...doc.data()});
+    document.getElementById('studentCount').textContent=`(${students.length} öğrenci)`;
+    if(!students.length){body.innerHTML='<div class="empty-table">Henüz öğrenci eklenmedi.</div>';return;}
+    body.innerHTML=students.map(s=>{
+      const sc=s.scores||{};
+      const correct=Object.values(sc).reduce((a,v)=>a+(v.mcq?.c||0)+(v.fill?.c||0)+(v.match?.c||0)+(v.tf?.c||0),0);
+      const total=Object.values(sc).reduce((a,v)=>a+(v.mcq?.t||0)+(v.fill?.t||0)+(v.match?.t||0)+(v.tf?.t||0),0);
+      const pct=total?Math.round(correct/total*100)+'%':'—';
+      return`<div class="table-row"><span class="tr-name">${s.name}</span><span class="tr-id">${s.studentNo}</span><span style="font-family:var(--mono);font-size:12px;font-weight:700;">${pct}</span><span><span class="status-pill ${s.active?'active':'inactive'}">${s.active?'Aktif':'Pasif'}</span></span><span style="display:flex;gap:4px;"><button class="icon-btn" onclick="loadStudentReport('${s.id}','${s.name}','${s.studentNo}')" title="Detaylı Rapor">📋</button><button class="icon-btn" onclick="resetPwd('${s.id}')" title="Şifre Sıfırla">🔑</button></span></div>`;
+    }).join('');
+  }catch(e){body.innerHTML='<div class="empty-table">Yüklenemedi.</div>';}
+}
+
+async function resetPwd(docId){
+  const newPwd=genPassword();const key=getCourseKey();
+  if(!db)return;
+  try{await db.doc(`courses/${key}/students/${docId}`).update({pwd:newPwd});showToast(`Yeni şifre: ${newPwd}`,'ok');}
+  catch(e){showToast('Güncelleme hatası.','err');}
+}
+
+// ════════════════════════════════════════════
+// DB — LOAD / SAVE
+// ════════════════════════════════════════════
+async function loadStudentData(){
+  if(!db||!S.student)return;
+  try{
+    const doc=await db.doc(`courses/${S.student.key}/students/${S.student.id}`).get();
+    if(doc.exists){const d=doc.data();S.scores=d.scores||{};S.earnedBadges=d.badges||[];S.aiAskCount=d.aiAskCount||0;}
+  }catch(e){}
+}
+
+async function persistStudentData(){
+  if(!db||!S.student)return;
+  try{await db.doc(`courses/${S.student.key}/students/${S.student.id}`).update({scores:S.scores,badges:S.earnedBadges,aiAskCount:S.aiAskCount});}
+  catch(e){}
+}
+
+// ════════════════════════════════════════════
+// LEVEL SYSTEM
+// ════════════════════════════════════════════
+function completedWeeks(){
+  const done=new Set();
+  TOPICS.forEach(t=>{const sc=S.scores[t.id];if(sc&&(sc.mcq?.t||sc.fill?.t||sc.tf?.t||sc.match?.t))done.add(t.week);});
+  return done.size;
+}
+
+function getCurrentLevel(){
+  const w=completedWeeks();
+  let lv=LEVELS[0];
+  for(const l of LEVELS){if(w>=l.minWeeks)lv=l;}
+  return lv;
+}
+
+function updateLevelUI(){
+  const lv=getCurrentLevel();
+  document.getElementById('headerAnimal').textContent=lv.animal;
+  document.getElementById('headerLevel').textContent=lv.name;
+}
+
+function checkLevelUp(){
+  const lv=getCurrentLevel();
+  if(S.prevLevel&&S.prevLevel!==lv.id){
+    showLevelUp(lv);
+  }
+  S.prevLevel=lv.id;
+  updateLevelUI();
+}
+
+function showLevelUp(lv){
+  document.getElementById('luAnimal').textContent=lv.animal;
+  document.getElementById('luLevel').textContent=lv.name+' Seviyesi!';
+  document.getElementById('luDesc').textContent=lv.desc;
+  document.getElementById('levelupOverlay').classList.add('show');
+}
+function closeLevelUp(){document.getElementById('levelupOverlay').classList.remove('show');}
+
+// TOPIC BADGES
+function checkTopicBadges(){
+  const badges=S.earnedBadges;
+  const completed=TOPICS.filter(t=>{const sc=S.scores[t.id];return sc&&(sc.mcq?.t||0)>0;}).length;
+  const perfect=TOPICS.filter(t=>{const sc=S.scores[t.id];return sc&&sc.mcq?.t>0&&sc.mcq.c===sc.mcq.t;}).length;
+  const newBadges=[];
+  if(completed>=1&&!badges.includes('ilk_adim')){newBadges.push('ilk_adim');}
+  if(perfect>=1&&!badges.includes('hizli_top')){newBadges.push('hizli_top');}
+  if(completed>=3&&!badges.includes('azimli')){newBadges.push('azimli');}
+  if(completed>=5&&!badges.includes('bilge')){newBadges.push('bilge');}
+  if(completed>=TOPICS.length&&!badges.includes('usta')){newBadges.push('usta');}
+  if(S.aiAskCount>=3&&!badges.includes('merakli')){newBadges.push('merakli');}
+  newBadges.forEach(b=>{
+    S.earnedBadges.push(b);
+    const info=TOPIC_BADGES.find(x=>x.id===b);
+    if(info)showToast(`🏅 Yeni Rozet: ${info.icon} ${info.name}`,'badge-toast');
+  });
+}
+
+// ════════════════════════════════════════════
+// APP
+// ════════════════════════════════════════════
+function launchApp(){
+  S.prevLevel=getCurrentLevel().id;
+  document.getElementById('appCourseTitle').textContent=S.course?.code||'TS 109';
+  document.getElementById('appStudentName').textContent=S.student?.name||'';
+  updateLevelUI();buildTopicNav();showView('dashboard');goTo('scrApp');
+}
+
+function getCurrentWeek(){
+  const done=Object.keys(S.scores);
+  for(let w=7;w>=1;w--){if((WEEK_TOPICS[w]||[]).some(t=>done.includes(t)))return w;}return 1;
+}
+
+function buildTopicNav(){
+  const c=document.getElementById('topicNav');c.innerHTML='';
+  // Build 15-week sidebar
+  for(let w=1;w<=15;w++){
+    // Exam weeks
+    if(w===8||w===15){
+      const exam=EXAM_WEEKS[w];
+      const btn=document.createElement('button');
+      const examLocked=DEMO_MODE&&w>DEMO_MAX_WEEK;
+      btn.className='nav-item'+(S.currentTopic===exam.id?' active':'')+(examLocked?' nav-locked':'');
+      btn.id='nav-topic-'+exam.id;
+      btn.onclick=examLocked?()=>showToast('Bu hafta henüz açılmadı 🔒','err'):()=>showExamWeek(w);
+      btn.innerHTML='<span class="icon">'+(examLocked?'🔒':exam.icon)+'</span><span class="label">H'+w+' '+exam.title+'</span>'+(examLocked?'<span style="font-size:9px;color:var(--text3);font-family:var(--mono);">yakında</span>':'');
+      c.appendChild(btn);
+      continue;
+    }
+    const tid=(WEEK_TOPICS[w]||[])[0];
+    if(!tid) continue;
+    const t=TOPICS.find(x=>x.id===tid);
+    if(!t) continue;
+    const sc=S.scores[t.id];const done=sc&&(sc.mcq?.t||0)>0;
+    const locked=DEMO_MODE&&w>DEMO_MAX_WEEK;
+    const btn=document.createElement('button');
+    btn.className='nav-item'+(S.currentTopic===t.id?' active':'')+(locked?' nav-locked':'');
+    btn.id='nav-topic-'+t.id;
+    if(!locked) btn.onclick=()=>startTopicMenu(t.id);
+    else btn.onclick=()=>showToast('Bu konu henüz açılmadı 🔒','err');
+    btn.title=locked?'Hafta '+w+' — henüz erişilemez':'';
+    btn.innerHTML='<span class="icon">'+(locked?'🔒':t.icon)+'</span><span class="label">H'+w+' '+t.title+'</span>'+(locked?'<span style="font-size:9px;color:var(--text3);font-family:var(--mono);">yakında</span>':(done?'<span class="check">✓</span>':''));
+    c.appendChild(btn);
+  }
+  document.getElementById('currentWeekDisp').textContent=getCurrentWeek();
+}
+
+function showExamWeek(w){
+  const exam=EXAM_WEEKS[w];
+  S.currentTopic=exam.id;
+  document.querySelectorAll('#scrApp .nav-item').forEach(b=>b.classList.remove('active'));
+  const el=document.getElementById('nav-topic-'+exam.id);if(el)el.classList.add('active');
+  const topicNames=exam.topics.map(id=>{const t=TOPICS.find(x=>x.id===id);return t?t.title:id;});
+  document.getElementById('mainContent').innerHTML=`
+    <div style="text-align:center;padding:48px 24px;">
+      <div style="font-size:64px;margin-bottom:16px;">${exam.icon}</div>
+      <h1 style="font-size:26px;font-weight:800;color:var(--navy);margin-bottom:8px;">${exam.title}</h1>
+      <p style="font-size:15px;color:var(--text2);margin-bottom:28px;">${exam.desc}</p>
+      <div style="background:#fff;border:2px solid var(--border);border-radius:16px;padding:24px;max-width:480px;margin:0 auto;text-align:left;">
+        <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:12px;">📚 ${w===8?'Kapsanan Konular':'Final Kapsamı'}:</div>
+        ${topicNames.map(n=>'<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text2);">• '+n+'</div>').join('')}
+      </div>
+      <div style="margin-top:24px;">
+        <button class="btn-accent" onclick="showView('progress')">📈 Gelişimimi Gör</button>
+      </div>
+    </div>`;
+}
+
+
+function showView(view){
+  S.view=view;S.currentTopic=null;
+  document.querySelectorAll('#scrApp .nav-item').forEach(b=>b.classList.remove('active'));
+  const el=document.getElementById(`nav-${view}`);if(el)el.classList.add('active');
+  if(view==='dashboard')renderDashboard();
+  else if(view==='progress')renderProgress();
+  else if(view==='badges')renderBadges();
+  else if(view==='map')renderMap();
+}
+
+// ════════════════════════════════════════════
+// DASHBOARD
+// ════════════════════════════════════════════
+function renderDashboard(){
+  const lv=getCurrentLevel();
+  const lvIdx=LEVELS.indexOf(lv);
+  const nextLv=LEVELS[lvIdx+1];
+  const doneWeeks=completedWeeks();
+  const progressToNext=nextLv?Math.min(100,Math.round((doneWeeks-lv.minWeeks)/(nextLv.minWeeks-lv.minWeeks)*100)):100;
+  const completed=Object.keys(S.scores).filter(k=>S.scores[k]?.mcq?.t>0).length;
+  const totalCorrect=Object.values(S.scores).reduce((s,v)=>s+(v.mcq?.c||0)+(v.fill?.c||0)+(v.match?.c||0)+(v.tf?.c||0),0);
+  const totalQ=Object.values(S.scores).reduce((s,v)=>s+(v.mcq?.t||0)+(v.fill?.t||0)+(v.match?.t||0)+(v.tf?.t||0),0);
+  const pct=totalQ?Math.round(totalCorrect/totalQ*100):0;
+
+  const topicsHtml=TOPICS.map(t=>{
+    const sc=S.scores[t.id];const p=sc&&sc.mcq?.t?Math.round(sc.mcq.c/sc.mcq.t*100):0;
+    const done=sc&&sc.mcq?.t>0;
+    const tLocked=DEMO_MODE&&t.week>DEMO_MAX_WEEK;
+    const cardStyle=tLocked?'opacity:.42;filter:grayscale(.75);cursor:not-allowed;':'';
+    const cardClick=tLocked?'showToast(\'Bu konu henüz açılmadı 🔒\',\'err\')':'startTopicMenu(\''+t.id+'\')';
+    return`<div class="topic-card${done&&!tLocked?' completed':''}" onclick="${cardClick}" style="${cardStyle}">
+      <div class="tc-icon">${tLocked?'🔒':t.icon}</div>
+      <h3>${t.title}${tLocked?' <span style="font-size:10px;color:#9ca3af;font-weight:400;">yakında</span>':''}</h3>
+      <p>${t.desc}</p>
+      <div class="tc-progress">
+        <div class="tc-bar"><div class="tc-bar-fill" style="width:${tLocked?0:p}%"></div></div>
+        <span>${tLocked?'🔒 Kilitli':(sc&&sc.mcq?.t?`${sc.mcq.c}/${sc.mcq.t}`:'Başlanmadı')}</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('mainContent').innerHTML=`
+    <div class="dash-welcome">
+      <h1>TS 109 Temel Fizik 👋</h1>
+      <p>Tıbbi Görüntüleme Teknikleri — Hafta 1 ve 2 Açık</p>
+      <div class="level-display">
+        <div class="ld-animal">${lv.animal}</div>
+        <div class="ld-info">
+          <div class="ld-name">${lv.name} Seviyesi</div>
+          <div class="ld-sub">${nextLv?`${nextLv.animal} ${nextLv.name}\'e ${nextLv.minWeeks-doneWeeks} hafta kaldı`:'Zirveye ulaştın! 🏆'}</div>
+          <div class="ld-bar"><div class="ld-bar-fill" style="width:${progressToNext}%"></div></div>
+        </div>
+        <div style="text-align:right;"><div style="font-size:20px;font-weight:800;color:#fff;">${S.earnedBadges.length}</div><div style="font-size:10px;opacity:.7;">Rozet</div></div>
+      </div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-num">${completed}</div><div class="stat-label">Tamamlanan Konu</div></div>
+      <div class="stat-card"><div class="stat-num">${TOPICS.length-completed}</div><div class="stat-label">Kalan Konu</div></div>
+      <div class="stat-card"><div class="stat-num">${totalCorrect}</div><div class="stat-label">Toplam Doğru</div></div>
+      <div class="stat-card"><div class="stat-num">${pct}%</div><div class="stat-label">Genel Başarı</div></div>
+    </div>
+    <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:14px;">Konular — Bir konuya tıklayarak aktivite seçin</div>
+    <div class="topic-grid">${topicsHtml}</div>`;
+}
+
+// ════════════════════════════════════════════
+// TOPIC MENU — Aktivite Seçimi
+// ════════════════════════════════════════════
+function startTopicMenu(topicId){
+  const _t=TOPICS.find(t=>t.id===topicId);
+  if(DEMO_MODE&&_t&&_t.week>DEMO_MAX_WEEK){
+    showToast('Bu konu henüz açılmadı 🔒','err'); return;
+  }
+  S.currentTopic=topicId;
+  document.querySelectorAll('#scrApp .nav-item').forEach(b=>b.classList.remove('active'));
+  const el=document.getElementById(`nav-topic-${topicId}`);if(el)el.classList.add('active');
+  const topic=TOPICS.find(t=>t.id===topicId);
+
+  document.getElementById('mainContent').innerHTML=`
+    <div class="ex-header">
+      <div>
+        <div class="ex-topic-badge">${topic.icon} Hafta ${topic.week}</div>
+        <div class="ex-title">${topic.title}</div>
+        <div class="ex-meta">Bir aktivite türü seçin</div>
+      </div>
+      <button class="btn-sec btn-sm" onclick="showView('dashboard')">← Geri</button>
+    </div>
+    <div class="activity-selector">
+      <div class="activity-btn" onclick="startActivity('${topicId}','mcq')">
+        <div class="ab-icon">🎯</div>
+        <div class="ab-title">Çoktan Seçmeli</div>
+        <div class="ab-desc">${topic.questions.length} soru, anlık geri bildirim</div>
+      </div>
+      <div class="activity-btn" onclick="startActivity('${topicId}','fill')">
+        <div class="ab-icon">✏️</div>
+        <div class="ab-title">Boşluk Doldurma</div>
+        <div class="ab-desc">Kelime havuzundan sürükle-bırak</div>
+      </div>
+      <div class="activity-btn" onclick="startActivity('${topicId}','match')">
+        <div class="ab-icon">🔗</div>
+        <div class="ab-title">Eşleştirme</div>
+        <div class="ab-desc">Kavram ve tanımları eşleştir</div>
+      </div>
+      <div class="activity-btn" onclick="startActivity('${topicId}','tf')">
+        <div class="ab-icon">⚖️</div>
+        <div class="ab-title">Doğru / Yanlış</div>
+        <div class="ab-desc">Hızlı bilgi kontrolü</div>
+      </div>
+      <div class="activity-btn" onclick="startActivity('${topicId}','flash')">
+        <div class="ab-icon">🃏</div>
+        <div class="ab-title">Flash Kartlar</div>
+        <div class="ab-desc">Tüm kartlar, tıkla-çevir</div>
+      </div>
+      <div class="activity-btn" onclick="startActivity('${topicId}','drag')">
+        <div class="ab-icon">🎯</div>
+        <div class="ab-title">Hedefe Sürükle</div>
+        <div class="ab-desc">Doğru kategoriye yerleştir</div>
+      </div>
+      <div class="activity-btn" onclick="startActivity('${topicId}','odd')">
+        <div class="ab-icon">🔍</div>
+        <div class="ab-title">Hangisi Dışarıda?</div>
+        <div class="ab-desc">Gruba uymayan birini bul</div>
+      </div>
+
+      <div class="activity-btn" onclick="startActivity('${topicId}','speed')">
+        <div class="ab-icon">⚡</div>
+        <div class="ab-title">Hız Turu</div>
+        <div class="ab-desc">10 saniyede cevapla!</div>
+      </div>
+
+    </div>`;
+}
+
+function startActivity(topicId,type){
+  S.currentTopic=topicId;S.activityType=type;S.currentQ=0;S.answers=[];
+  if(type==='mcq')renderMCQ();
+  else if(type==='fill')renderFillBlank();
+  else if(type==='match')renderMatching();
+  else if(type==='tf')renderTrueFalse();
+  else if(type==='flash')renderFlashCards();
+  else if(type==='drag')renderDragDrop();
+  else if(type==='odd')renderOddOne();
+  else if(type==='speed')renderSpeedRound();
+}
+
+// ════════════════════════════════════════════
+// MCQ
+// ════════════════════════════════════════════
+let _answered=false;
+function renderMCQ(){
+  _answered=false;
+  const topic=TOPICS.find(t=>t.id===S.currentTopic);
+  const q=topic.questions[S.currentQ];
+  const total=topic.questions.length;
+  const pct=Math.round(S.currentQ/total*100);
+  const letters=['A','B','C','D'];
+  document.getElementById('mainContent').innerHTML=`
+    <div class="ex-header">
+      <div>
+        <div class="ex-topic-badge">${topic.icon} Çoktan Seçmeli</div>
+        <div class="ex-title">${topic.title}</div>
+        <div class="ex-meta">Soru ${S.currentQ+1} / ${total}</div>
+      </div>
+      <button class="btn-sec btn-sm" onclick="startTopicMenu('${S.currentTopic}')">← Geri</button>
+    </div>
+    <div class="progress-strip"><div class="progress-strip-fill" style="width:${pct}%"></div></div>
+    <div class="q-card">
+      <div class="q-number">Soru ${S.currentQ+1}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-options">${q.opts.map((o,i)=>`<div class="q-option" id="opt-${i}" onclick="selectMCQ(${i})"><div class="opt-letter">${letters[i]}</div>${o}</div>`).join('')}</div>
+      <div class="exp-box" id="expBox"><div class="exp-label">📚 Açıklama</div><div id="expText"></div></div>
+      <div id="aiArea"></div>
+    </div>
+    <div class="ex-controls">
+      <button class="btn-sec btn-sm" onclick="prevMCQ()" ${S.currentQ===0?'disabled':''}>← Önceki</button>
+      <button class="btn-accent btn-sm" id="nextBtn" onclick="nextMCQ()" disabled>Sonraki →</button>
+      <span class="q-counter">${S.currentQ+1}/${total}</span>
+    </div>`;
+}
+
+function selectMCQ(idx){
+  if(_answered)return;_answered=true;
+  const topic=TOPICS.find(t=>t.id===S.currentTopic);
+  const q=topic.questions[S.currentQ];
+  const correct=q.ans===idx;
+  var mcqAttempt = incrAttempt(S.currentTopic, S.currentQ);
+  var _t = TOPICS.find(function(t){ return t.id===S.currentTopic; });
+  var _q = _t.questions[S.currentQ];
+  writeLog({type:'mcq', topic:S.currentTopic, topicName:_t.title, week:_t.week,
+    qIdx:S.currentQ, question:_q.q, chosen:_q.opts[idx], chosenIdx:idx,
+    correct:_q.opts[_q.ans], isCorrect:correct, attempt:mcqAttempt});
+  S.answers.push({correct});
+  document.querySelectorAll('.q-option').forEach((el,i)=>{
+    if(i===q.ans)el.classList.add('correct');
+    else if(i===idx&&!correct)el.classList.add('wrong');
+    el.style.pointerEvents='none';
+  });
+  document.getElementById('expText').textContent=q.exp;
+  document.getElementById('expBox').classList.add('visible');
+  if(S.sampleCap){
+    document.getElementById('aiArea').innerHTML=`<button class="ai-btn" id="aiBtn" onclick="askAI()">🤖 Claude\'a detaylı açıklat</button><div class="ai-box" id="aiBox"></div>`;
+  }
+  document.getElementById('nextBtn').disabled=false;
+  showToast(correct?'Doğru! 🎉':'Yanlış! Açıklamayı inceleyin.',correct?'ok':'err');
+}
+
+async function askAI(){
+  if(!S.sampleCap)return;
+  const topic=TOPICS.find(t=>t.id===S.currentTopic);
+  const q=topic.questions[S.currentQ];
+  const btn=document.getElementById('aiBtn');const box=document.getElementById('aiBox');
+  btn.disabled=true;btn.innerHTML='<span class="loading">Düşünüyor…</span>';
+  box.classList.add('visible');box.textContent='';
+  try{
+    await S.sampleCap(`Sen tıbbi görüntüleme teknikleri programında TS 109 Temel Fizik dersi veren bir hocasın. Öğrenci şu soruyu yanıtladı:\nSoru: ${q.q}\nDoğru cevap: ${q.opts[q.ans]}\nKısa açıklama: ${q.exp}\n\nBu konuyu ön lisans düzeyinde, tıbbi görüntülemeyle bağlantı kurarak Türkçe olarak 3-4 cümleyle daha kapsamlı açıkla. Gerçek bir klinik örnek ekle.`,
+      {onText:({text})=>{box.textContent=text;}});
+    S.aiAskCount++;checkTopicBadges();persistStudentData();
+  }catch(e){box.textContent='Claude\'a şu an ulaşılamıyor.';}
+  btn.innerHTML='🤖 Claude\'a detaylı açıklat';btn.disabled=false;
+}
+
+function nextMCQ(){
+  const topic=TOPICS.find(t=>t.id===S.currentTopic);
+  S.currentQ++;
+  if(S.currentQ>=topic.questions.length)finishMCQ();
+  else renderMCQ();
+}
+function prevMCQ(){if(S.currentQ>0){S.currentQ--;renderMCQ();}}
+
+function finishMCQ(){
+  const topic=TOPICS.find(t=>t.id===S.currentTopic);
+  const correct=S.answers.filter(a=>a.correct).length;
+  const total=topic.questions.length;
+  if(!S.scores[S.currentTopic])S.scores[S.currentTopic]={};
+  S.scores[S.currentTopic].mcq={c:correct,t:total,d:new Date().toLocaleDateString('tr-TR')};
+  checkTopicBadges();checkLevelUp();buildTopicNav();persistStudentData();
+  showScoreScreen(correct,total,'mcq');
+}
+
+// ════════════════════════════════════════════
+// FILL BLANK
+// ════════════════════════════════════════════
+let fillState={blanks:[],filled:[],correct:0};
+
+function renderFillBlank(){
+  const topic=TOPICS.find(t=>t.id===S.currentTopic);
+  const exercises=topic.fillBlanks||[];
+  if(!exercises.length){showToast('Bu konu için boşluk doldurma henüz eklenmedi.','err');startTopicMenu(S.currentTopic);return;}
+  const ex=exercises[S.currentQ%exercises.length];
+  fillState={blanks:[...ex.blanks],filled:Array(ex.blanks.length).fill(null),correct:0};
+  const pool=[...ex.pool].sort(()=>Math.random()-.5);
+
+  const parts=ex.sentence.split('___');
+  let sentenceHtml='';
+  parts.forEach((p,i)=>{
+    sentenceHtml+=p;
+    if(i<ex.blanks.length){
+      sentenceHtml+=`<span class="blank-span" id="blank-${i}" ondragover="event.preventDefault()" ondrop="dropWord(event,${i})">&nbsp;</span>`;
+    }
+  });
+
+  document.getElementById('mainContent').innerHTML=`
+    <div class="ex-header">
+      <div>
+        <div class="ex-topic-badge">${topic.icon} Boşluk Doldurma</div>
+        <div class="ex-title">${topic.title}</div>
+        <div class="ex-meta">Egzersiz ${(S.currentQ%exercises.length)+1} / ${exercises.length}</div>
+      </div>
+      <button class="btn-sec btn-sm" onclick="startTopicMenu('${S.currentTopic}')">← Geri</button>
+    </div>
+    <div class="fillblank-card">
+      <div style="font-size:12px;color:var(--text2);margin-bottom:10px;font-weight:600;">Kelimeleri sürükleyerek boşlukları doldurun:</div>
+      <div class="blank-sentence">${sentenceHtml}</div>
+      <div style="margin-top:20px;">
+        <div class="pool-label">Kelime Havuzu</div>
+        <div class="word-pool" id="wordPool">
+          ${pool.map((w,i)=>`<div class="word-chip" id="chip-${i}" draggable="true"
+            ondragstart="dragWord(event,'${w}','chip-${i}')"
+            onclick="clickWord('${w}','chip-${i}')">${w}</div>`).join('')}
+        </div>
+      </div>
+      <div id="fillFeedback" style="margin-top:14px;"></div>
+    </div>
+    <div class="ex-controls">
+      <button class="btn-accent btn-sm" id="checkFillBtn" onclick="checkFill()">Kontrol Et ✓</button>
+      <button class="btn-sec btn-sm" onclick="resetFill()">↺ Sıfırla</button>
+      <button class="btn-accent btn-sm" id="nextFillBtn" onclick="nextFill()" disabled>Sonraki →</button>
+    </div>`;
+}
+
+let selectedChip=null;
+function dragWord(e,word,chipId){e.dataTransfer.setData('word',word);e.dataTransfer.setData('chipId',chipId);}
+function clickWord(word,chipId){
+  if(selectedChip){document.getElementById(selectedChip)?.classList.remove('selected-chip');}
+  selectedChip=chipId;
+  document.getElementById(chipId)?.classList.add('selected-chip');
+}
+function dropWord(e,blankIdx){
+  e.preventDefault();
+  const word=e.dataTransfer.getData('word');
+  const chipId=e.dataTransfer.getData('chipId');
+  placeWord(word,chipId,blankIdx);
+}
+function placeWord(word,chipId,blankIdx){
+  const prev=fillState.filled[blankIdx];
+  if(prev){
+    const chips=document.querySelectorAll('.word-chip');
+    chips.forEach(c=>{if(c.textContent===prev&&c.classList.contains('used')){c.classList.remove('used');}});
+  }
+  fillState.filled[blankIdx]=word;
+  const span=document.getElementById(`blank-${blankIdx}`);
+  if(span){span.textContent=word;span.classList.add('filled');}
+  if(chipId){const chip=document.getElementById(chipId);if(chip)chip.classList.add('used');}
+  selectedChip=null;
+}
+
+function resetFill(){
+  fillState.filled=Array(fillState.blanks.length).fill(null);
+  document.querySelectorAll('.blank-span').forEach(s=>{s.textContent='\u00a0';s.className='blank-span';});
+  document.querySelectorAll('.word-chip').forEach(c=>c.classList.remove('used','selected-chip'));
+  document.getElementById('fillFeedback').innerHTML='';
+  document.getElementById('nextFillBtn').disabled=true;
+}
+
+function checkFill(){
+  const topic=TOPICS.find(t=>t.id===S.currentTopic);
+  const ex=topic.fillBlanks[S.currentQ%topic.fillBlanks.length];
+  let correct=0;
+  ex.blanks.forEach((ans,i)=>{
+    const span=document.getElementById(`blank-${i}`);
+    if(fillState.filled[i]===ans){correct++;if(span){span.classList.add('correct-fill');}}
+    else{if(span){span.classList.add('wrong-fill');span.textContent=fillState.filled[i]||'(boş)';}}
+  });
+  const fb=document.getElementById('fillFeedback');
+  fb.innerHTML=`<div style="padding:12px;background:${correct===ex.blanks.length?'var(--green2)':'var(--red2)'};border-radius:10px;font-size:13px;font-weight:600;color:${correct===ex.blanks.length?'var(--green)':'var(--red)'};">
+    ${correct}/${ex.blanks.length} doğru! ${correct===ex.blanks.length?'🎉 Mükemmel!':'Doğru cevaplar: '+ex.blanks.join(', ')}
+  </div>`;
+  document.getElementById('checkFillBtn').disabled=true;
+  document.getElementById('nextFillBtn').disabled=false;
+  var _flt = TOPICS.find(function(t){ return t.id===S.currentTopic; });
+  writeLog({type:'fill', topic:S.currentTopic, topicName:_flt.title, week:_flt.week,
+    qIdx:S.currentQ%_flt.fillBlanks.length, question:ex.sentence,
+    chosen:JSON.stringify(fillState.filled), correct:JSON.stringify(ex.blanks),
+    isCorrect:correct===ex.blanks.length, attempt:1});
+  if(!S.scores[S.currentTopic])S.scores[S.currentTopic]={};
+  const sc=S.scores[S.currentTopic];
+  sc.fill={c:(sc.fill?.c||0)+correct,t:(sc.fill?.t||0)+ex.blanks.length,d:new Date().toLocaleDateString('tr-TR')};
+  if(!S.earnedBadges.includes('hafiza'))S.earnedBadges.push('hafiza');
+  checkTopicBadges();buildTopicNav();persistStudentData();
+}
+
+function nextFill(){
+  S.currentQ++;
+  const topic=TOPICS.find(t=>t.id===S.currentTopic);
+  if(S.currentQ>=topic.fillBlanks.length){showScoreScreen(S.scores[S.currentTopic]?.fill?.c||0,S.scores[S.currentTopic]?.fill?.t||1,'fill');}
+  else renderFillBlank();
+}
+
+// ════════════════════════════════════════════
+// MATCHING
+// ════════════════════════════════════════════
+let matchState={pairs:[],selectedLeft:null,matched:[]};
+
+function renderMatching(){
+  const topic=TOPICS.find(t=>t.id===S.currentTopic);
+  const exercises=topic.matching||[];
+  if(!exercises.length){showToast('Bu konu için eşleştirme henüz eklenmedi.','err');startTopicMenu(S.currentTopic);return;}
+  const ex=exercises[S.currentQ%exercises.length];
+  matchState={pairs:ex.pairs,selectedLeft:null,matched:[],correct:0};
+  const rightShuffled=[...ex.pairs].sort(()=>Math.random()-.5);
+
+  document.getElementById('mainContent').innerHTML=`
+    <div class="ex-header">
+      <div>
+        <div class="ex-topic-badge">${topic.icon} Eşleştirme</div>
+        <div class="ex-title">${topic.title}</div>
+        <div class="ex-meta">Egzersiz ${(S.currentQ%exercises.length)+1} / ${exercises.length}</div>
+      </div>
+      <button class="btn-sec btn-sm" onclick="startTopicMenu('${S.currentTopic}')">← Geri</button>
+    </div>
+    <div class="q-card">
+      <div class="q-number">Sol ve sağ sütundan eşleşenleri seçin</div>
+      <div class="match-grid">
+        <div class="match-col">
+          <div class="match-col-title">Kavram / Formül</div>
+          ${ex.pairs.map((p,i)=>`<div class="match-item" id="left-${i}" onclick="selectLeft(${i})">${p.l}</div>`).join('')}
+        </div>
+        <div class="match-col">
+          <div class="match-col-title">Tanım / Değer</div>
+          ${rightShuffled.map((p,i)=>`<div class="match-item" id="right-${i}" onclick="selectRight(${i},'${p.r.replace(/'/g,"\\'")}','${ex.pairs.find(x=>x.r===p.r)?ex.pairs.indexOf(ex.pairs.find(x=>x.r===p.r)):0}')">${p.r}</div>`).join('')}
+        </div>
+      </div>
+      <div id="matchFeedback" style="margin-top:10px;"></div>
+    </div>
+    <div class="ex-controls">
+      <button class="btn-accent btn-sm" id="nextMatchBtn" onclick="nextMatch()" disabled>Sonraki →</button>
+    </div>`;
+}
+
+function selectLeft(idx){
+  matchState.selectedLeft=idx;
+  document.querySelectorAll('.match-item').forEach(el=>{if(!el.classList.contains('matched'))el.classList.remove('selected');});
+  const el=document.getElementById(`left-${idx}`);
+  if(el&&!el.classList.contains('matched'))el.classList.add('selected');
+}
+
+function selectRight(rIdx,rVal,lIdxStr){
+  const lIdx=parseInt(lIdxStr);
+  if(matchState.selectedLeft===null)return;
+  const correct=matchState.selectedLeft===lIdx;
+  const lEl=document.getElementById(`left-${matchState.selectedLeft}`);
+  const rEl=document.getElementById(`right-${rIdx}`);
+  if(correct){
+    lEl?.classList.add('matched');rEl?.classList.add('matched');
+    matchState.matched.push(lIdx);matchState.correct++;
+    if(matchState.matched.length===matchState.pairs.length){
+      document.getElementById('matchFeedback').innerHTML=`<div style="padding:10px;background:var(--green2);border-radius:8px;font-size:13px;font-weight:700;color:var(--green);">🎉 Tüm eşleşmeler doğru!</div>`;
+      document.getElementById('nextMatchBtn').disabled=false;
+      if(!S.scores[S.currentTopic])S.scores[S.currentTopic]={};
+      const sc=S.scores[S.currentTopic];
+      sc.match={c:(sc.match?.c||0)+matchState.pairs.length,t:(sc.match?.t||0)+matchState.pairs.length,d:new Date().toLocaleDateString('tr-TR')};
+      if(!S.earnedBadges.includes('eslestirme'))S.earnedBadges.push('eslestirme');
+      checkTopicBadges();buildTopicNav();persistStudentData();
+    }
+  } else {
+    lEl?.classList.add('wrong-match');rEl?.classList.add('wrong-match');
+    setTimeout(()=>{lEl?.classList.remove('wrong-match','selected');rEl?.classList.remove('wrong-match');},700);
+  }
+  matchState.selectedLeft=null;
+}
+
+function nextMatch(){
+  S.currentQ++;
+  const topic=TOPICS.find(t=>t.id===S.currentTopic);
+  if(S.currentQ>=topic.matching.length)showScoreScreen(S.scores[S.currentTopic]?.match?.c||0,S.scores[S.currentTopic]?.match?.t||1,'match');
+  else renderMatching();
+}
+
+// ════════════════════════════════════════════
+// TRUE / FALSE
+// ════════════════════════════════════════════
+let tfAnswered=false;
+function renderTrueFalse(){
+  tfAnswered=false;
+  const topic=TOPICS.find(t=>t.id===S.currentTopic);
+  const items=topic.trueFalse||[];
+  if(!items.length){showToast('Bu konu için D/Y henüz eklenmedi.','err');startTopicMenu(S.currentTopic);return;}
+  const item=items[S.currentQ%items.length];
+  const pct=Math.round(S.currentQ/items.length*100);
+  document.getElementById('mainContent').innerHTML=`
+    <div class="ex-header">
+      <div>
+        <div class="ex-topic-badge">${topic.icon} Doğru / Yanlış</div>
+        <div class="ex-title">${topic.title}</div>
+        <div class="ex-meta">İfade ${S.currentQ+1} / ${items.length}</div>
+      </div>
+      <button class="btn-sec btn-sm" onclick="startTopicMenu('${S.currentTopic}')">← Geri</button>
+    </div>
+    <div class="progress-strip"><div class="progress-strip-fill" style="width:${pct}%"></div></div>
+    <div class="tf-card">
+      <div class="q-number">İfade ${S.currentQ+1}</div>
+      <div class="q-text" style="font-size:16px;">${item.s}</div>
+      <div class="tf-options">
+        <button class="tf-btn true-btn" id="trueBtn" onclick="answerTF(true)">✓ Doğru</button>
+        <button class="tf-btn false-btn" id="falseBtn" onclick="answerTF(false)">✗ Yanlış</button>
+      </div>
+      <div class="exp-box" id="tfExp"><div class="exp-label">📚 Açıklama</div><div id="tfExpText"></div></div>
+    </div>
+    <div class="ex-controls">
+      <button class="btn-accent btn-sm" id="nextTfBtn" onclick="nextTF()" disabled>Sonraki →</button>
+      <span class="q-counter">${S.currentQ+1}/${items.length}</span>
+    </div>`;
+}
+
+function answerTF(answer){
+  if(tfAnswered)return;tfAnswered=true;
+  const topic=TOPICS.find(t=>t.id===S.currentTopic);
+  const item=topic.trueFalse[S.currentQ%topic.trueFalse.length];
+  const correct=answer===item.ans;
+  var _tft = TOPICS.find(function(t){ return t.id===S.currentTopic; });
+  var _tfi = _tft.trueFalse[S.currentQ % _tft.trueFalse.length];
+  var _tfa = incrAttempt(S.currentTopic, 'tf'+S.currentQ);
+  writeLog({type:'tf', topic:S.currentTopic, topicName:_tft.title, week:_tft.week,
+    qIdx:S.currentQ, question:_tfi.s, chosen:answer?'Doğru':'Yanlış',
+    correct:_tfi.ans?'Doğru':'Yanlış', isCorrect:correct, attempt:_tfa});
+  const trueBtn=document.getElementById('trueBtn');const falseBtn=document.getElementById('falseBtn');
+  trueBtn.disabled=true;falseBtn.disabled=true;
+  if(item.ans){trueBtn.classList.add('correct');if(!correct)falseBtn.classList.add('wrong');}
+  else{falseBtn.classList.add('correct');if(!correct)trueBtn.classList.add('wrong');}
+  document.getElementById('tfExpText').textContent=item.exp;
+  document.getElementById('tfExp').classList.add('visible');
+  document.getElementById('nextTfBtn').disabled=false;
+  S.answers.push({correct});
+  showToast(correct?'Doğru! 🎉':'Yanlış!',correct?'ok':'err');
+}
+
+function nextTF(){
+  const topic=TOPICS.find(t=>t.id===S.currentTopic);
+  S.currentQ++;
+  if(S.currentQ>=topic.trueFalse.length){
+    const correct=S.answers.filter(a=>a.correct).length;
+    const total=topic.trueFalse.length;
+    if(!S.scores[S.currentTopic])S.scores[S.currentTopic]={};
+    S.scores[S.currentTopic].tf={c:correct,t:total,d:new Date().toLocaleDateString('tr-TR')};
+    checkTopicBadges();checkLevelUp();buildTopicNav();persistStudentData();
+    showScoreScreen(correct,total,'tf');
+  } else renderTrueFalse();
+}
+
+// ════════════════════════════════════════════
+// SCORE SCREEN
+// ════════════════════════════════════════════
+function showScoreScreen(correct,total,type){
+  const pct=Math.round(correct/total*100);
+  const msg=pct>=80?'🌟 Mükemmel! Devam et!':pct>=60?'👍 İyi iş! Tekrar dene!':'💪 Biraz daha çalış!';
+  const typeLabel={mcq:'Çoktan Seçmeli',fill:'Boşluk Doldurma',match:'Eşleştirme',tf:'Doğru/Yanlış'}[type];
+  const newBadge=S.earnedBadges[S.earnedBadges.length-1];
+  const badgeInfo=newBadge?TOPIC_BADGES.find(b=>b.id===newBadge):null;
+  document.getElementById('mainContent').innerHTML=`
+    <div class="score-screen">
+      <div class="score-ring" style="--pct:${pct}%">
+        <div class="score-inner">
+          <div class="score-num">${correct}</div>
+          <div class="score-denom">/ ${total}</div>
+        </div>
+      </div>
+      <div class="score-title">${typeLabel} Tamamlandı</div>
+      <div class="score-msg">${msg}</div>
+      ${badgeInfo?`<div class="badge-earned show"><div class="be-icon">${badgeInfo.icon}</div><div class="be-title">Yeni Rozet Kazandın!</div><div class="be-name">${badgeInfo.name}</div></div>`:''}
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn-sec btn-sm" onclick="startActivity('${S.currentTopic}','${type}')">🔄 Tekrar</button>
+        <button class="btn-sec btn-sm" onclick="startTopicMenu('${S.currentTopic}')">📋 Diğer Aktiviteler</button>
+        <button class="btn-accent btn-sm" onclick="showView('dashboard')">🏠 Ana Sayfa</button>
+      </div>
+    </div>`;
+}
+
+// ════════════════════════════════════════════
+// PROGRESS
+// ════════════════════════════════════════════
+function renderProgress(){
+  const weekCards=Object.entries(WEEK_TOPICS).map(([w,tids])=>{
+    const topics=tids.map(id=>TOPICS.find(t=>t.id===id)).filter(Boolean);
+    const rows=topics.map(t=>{
+      const sc=S.scores[t.id];
+      const total=(sc?.mcq?.t||0)+(sc?.fill?.t||0)+(sc?.match?.t||0)+(sc?.tf?.t||0);
+      const correct=(sc?.mcq?.c||0)+(sc?.fill?.c||0)+(sc?.match?.c||0)+(sc?.tf?.c||0);
+      const dot=total?(correct/total>=0.6?'done':'partial'):'';
+      const scoreStr=total?`${correct}/${total} · ${Math.round(correct/total*100)}%`:'—';
+      return`<div class="wt-item"><div class="wt-dot ${dot}"></div><span class="wt-name">${t.icon} ${t.title}</span><span class="wt-score">${scoreStr}</span></div>`;
+    }).join('');
+    return`<div class="week-card"><div class="week-card-title">Hafta ${w}</div>${rows}</div>`;
+  }).join('');
+
+  const bars=TOPICS.map(t=>{
+    const sc=S.scores[t.id];
+    const total=(sc?.mcq?.t||0)+(sc?.fill?.t||0)+(sc?.match?.t||0)+(sc?.tf?.t||0);
+    const correct=(sc?.mcq?.c||0)+(sc?.fill?.c||0)+(sc?.match?.c||0)+(sc?.tf?.c||0);
+    const p=total?Math.round(correct/total*100):0;
+    return`<div><div class="tp-header"><span class="tp-name">${t.icon} ${t.title}</span><span class="tp-pct">${p}%</span></div><div class="prog-bar"><div class="prog-bar-fill" style="width:${p}%"></div></div></div>`;
+  }).join('');
+
+  document.getElementById('mainContent').innerHTML=`
+    <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:14px;">Haftalık Gelişimim</div>
+    <div class="week-grid" style="margin-bottom:28px;">${weekCards}</div>
+    <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:12px;">Konu Bazlı Başarı</div>
+    <div style="background:#fff;border:2px solid var(--border);border-radius:14px;padding:18px;">${bars}</div>`;
+}
+
+// ════════════════════════════════════════════
+// BADGES
+// ════════════════════════════════════════════
+function renderBadges(){
+  const lv=getCurrentLevel();
+  const levelCards=LEVELS.map((l,i)=>{
+    const earned=completedWeeks()>=l.minWeeks;
+    return`<div class="badge-card ${earned?'earned-badge':'locked-badge'}">
+      <div class="bc-animal">${l.animal}</div>
+      <div class="bc-level">Seviye ${i+1}</div>
+      <div class="bc-name">${l.name}</div>
+      <div class="bc-req">${l.minWeeks===0?'Başlangıç':`${l.minWeeks} hafta tamamla`}</div>
+      <div class="bc-status ${earned?'earned':'locked'}">${earned?'✓ Kazanıldı':'Kilitli 🔒'}</div>
+    </div>`;
+  }).join('');
+
+  const topicBadgeCards=TOPIC_BADGES.map(b=>{
+    const earned=S.earnedBadges.includes(b.id);
+    return`<div class="badge-card ${earned?'earned-badge':'locked-badge'}">
+      <div class="bc-animal" style="font-size:32px;">${b.icon}</div>
+      <div class="bc-level">Başarı Rozeti</div>
+      <div class="bc-name">${b.name}</div>
+      <div class="bc-req">${b.desc}</div>
+      <div class="bc-status ${earned?'earned':'locked'}">${earned?'✓ Kazanıldı':'Kilitli 🔒'}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('mainContent').innerHTML=`
+    <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px;">Seviye Rozeti — ${lv.animal} ${lv.name}</div>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:16px;">Her 2 haftayı tamamladıkça seviye atlarsın 🚀</p>
+    <div class="badges-grid" style="margin-bottom:28px;">${levelCards}</div>
+    <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px;">Başarı Rozetleri</div>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:16px;">Aktiviteleri tamamlayarak özel rozetler kazan!</p>
+    <div class="badges-grid">${topicBadgeCards}</div>`;
+}
+
+// ════════════════════════════════════════════
+// CONCEPT MAP
+// ════════════════════════════════════════════
+function renderMap(){
+  const nodes=[
+    {id:'mech',label:'MEKANİK',x:400,y:55,r:42,color:'#1a2a5e',section:true},
+    {id:'units',label:'Ölçme\nBirimler',x:120,y:165,r:34,color:'#3b5999'},
+    {id:'vectors',label:'Vektörler',x:265,y:165,r:34,color:'#3b5999'},
+    {id:'force',label:'Kuvvet',x:420,y:165,r:34,color:'#3b5999'},
+    {id:'motion',label:'Hareket',x:570,y:165,r:34,color:'#3b5999'},
+    {id:'momentum',label:'Momentum',x:190,y:295,r:34,color:'#4a7ab5'},
+    {id:'equilibrium',label:'Denge\nMoment',x:380,y:295,r:34,color:'#4a7ab5'},
+    {id:'energy',label:'İş/Güç\nEnerji',x:560,y:295,r:34,color:'#4a7ab5'},
+    {id:'emain',label:'ELEKTRİK &\nMANYETİZMA',x:400,y:415,r:42,color:'#f97316',section:true},
+    {id:'electrostatics',label:'Elektro\nstatik',x:160,y:510,r:34,color:'#ea580c'},
+    {id:'electricity',label:'Elektrik\nDevreler',x:315,y:510,r:34,color:'#ea580c'},
+    {id:'magnetism',label:'Manyetik\nAlan',x:470,y:510,r:34,color:'#ea580c'},
+    {id:'electromag',label:'Elektro\nManyetizma',x:625,y:510,r:34,color:'#ea580c'},
+    {id:'radmain',label:'RADYASYON',x:400,y:620,r:42,color:'#dc2626',section:true},
+    {id:'radiation',label:'Radyasyon\nTürleri',x:240,y:720,r:34,color:'#b91c1c'},
+    {id:'interaction',label:'Madde\nEtkileşimi',x:560,y:720,r:34,color:'#b91c1c'},
+  ];
+  const edges=[['mech','units'],['mech','vectors'],['mech','force'],['mech','motion'],['force','momentum'],['force','equilibrium'],['motion','momentum'],['force','energy'],['motion','energy'],['mech','emain'],['emain','electrostatics'],['emain','electricity'],['emain','magnetism'],['emain','electromag'],['electrostatics','electricity'],['electricity','magnetism'],['magnetism','electromag'],['emain','radmain'],['radmain','radiation'],['radmain','interaction']];
+  const done=Object.keys(S.scores).filter(k=>S.scores[k]?.mcq?.t>0);
+  const W=800,H=780;
+  const edgesHtml=edges.map(([a,b])=>{const na=nodes.find(n=>n.id===a),nb=nodes.find(n=>n.id===b);return`<line x1="${na.x}" y1="${na.y}" x2="${nb.x}" y2="${nb.y}" stroke="#c5d5e8" stroke-width="1.5" stroke-dasharray="5 3"/>`;}).join('');
+  const nodesHtml=nodes.map(n=>{
+    const isS=n.section,isDone=done.includes(n.id);
+    const stroke=isDone?'#16a34a':n.color;
+    const click=!isS?`onclick="startTopicMenu('${n.id}')" style="cursor:pointer"`:'';
+    const lines=n.label.split('\n');
+    const linesHtml=lines.map((l,i)=>`<tspan x="${n.x}" dy="${i===0?(lines.length>1?-7:0):15}">${l}</tspan>`).join('');
+    const check=isDone?`<text x="${n.x+n.r-10}" y="${n.y-n.r+12}" fill="#16a34a" font-size="13" font-weight="bold">✓</text>`:'';
+    return`<g ${click}><circle cx="${n.x}" cy="${n.y}" r="${n.r}" fill="${isS?n.color+'18':'white'}" stroke="${stroke}" stroke-width="${isS?2.5:1.5}"/><text x="${n.x}" y="${n.y+4}" text-anchor="middle" fill="${isS?n.color:'#4a5568'}" font-size="${isS?10:9}" font-weight="${isS?800:500}" font-family="Inter,sans-serif">${linesHtml}</text>${check}</g>`;
+  }).join('');
+  document.getElementById('mainContent').innerHTML=`
+    <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px;">Kavram Haritası</div>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:14px;">Konulara tıklayarak egzersizlere ulaşın. ✓ tamamlanan konular.</p>
+    <div class="map-container"><svg class="cmap" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${edgesHtml}${nodesHtml}</svg></div>`;
+}
+
+// ════════════════════════════════════════════
+// TOAST
+// ════════════════════════════════════════════
+
+// ════════════════════════════════════════════
+// LOG SİSTEMİ
+// ════════════════════════════════════════════
+var L = { sessionId: Math.random().toString(36).slice(2,10), attempts: {} };
+
+async function writeLog(entry){
+  if(!db || !S.student) return;
+  var key = getCourseKey();
+  var docId = Date.now() + '_' + Math.random().toString(36).slice(2,6);
+  try{
+    await db.doc('logs/' + key + '/' + S.student.id + '/' + docId).set(
+      Object.assign({}, entry, {
+        studentName: S.student.name,
+        studentNo: S.student.studentNo,
+        sessionId: L.sessionId,
+        ts: new Date().toISOString(),
+        tsLocal: new Date().toLocaleString('tr-TR')
+      })
+    );
+  } catch(e){}
+}
+
+function incrAttempt(topicId, qKey){
+  var k = topicId + '|' + qKey;
+  L.attempts[k] = (L.attempts[k]||0) + 1;
+  return L.attempts[k];
+}
+
+// ════════════════════════════════════════════
+// ADMIN RAPOR
+// ════════════════════════════════════════════
+async function loadStudentReport(studentId, studentName, studentNo){
+  showToast('Rapor hazırlanıyor…');
+  var key = getCourseKey();
+  var logs = [];
+  if(db){
+    try{
+      var snap = await db.collection('logs/' + key + '/' + studentId).get();
+      for(var doc of snap.docs){ logs.push(Object.assign({id:doc.id}, doc.data())); }
+    }catch(e){}
+  }
+  var scores = {};
+  if(db){
+    try{
+      var sdoc = await db.doc('courses/' + key + '/students/' + studentId).get();
+      if(sdoc.exists) scores = sdoc.data().scores || {};
+    }catch(e){}
+  }
+
+  logs.sort(function(a,b){ return a.ts > b.ts ? 1 : -1; });
+
+  var byTopic = {};
+  logs.forEach(function(l){
+    if(!byTopic[l.topic]) byTopic[l.topic] = {name: l.topicName||l.topic, week: l.week, entries: []};
+    byTopic[l.topic].entries.push(l);
+  });
+
+  var typeLabel = {mcq:'Çoktan Seçmeli', tf:'Doğru/Yanlış', fill:'Boşluk Doldurma', match:'Eşleştirme', flash:'Flash Kartlar', drag:'Hedefe Sürükle', odd:'Hangisi Dışarıda?', speed:'Hız Turu'};
+
+  var topicSections = '';
+  Object.keys(byTopic).forEach(function(tid){
+    var tdata = byTopic[tid];
+    var sc = scores[tid] || {};
+    var mcqPct = sc.mcq && sc.mcq.t ? Math.round(sc.mcq.c/sc.mcq.t*100) : null;
+
+    var qGroups = {};
+    tdata.entries.forEach(function(e){
+      var k = (e.type||'') + '|' + (e.qIdx!=null?e.qIdx:'');
+      if(!qGroups[k]) qGroups[k] = [];
+      qGroups[k].push(e);
+    });
+
+    var qRows = '';
+    Object.keys(qGroups).forEach(function(qk){
+      var entries = qGroups[qk];
+      var first = entries[0];
+      var firstCorrectIdx = entries.findIndex(function(e){ return e.isCorrect; });
+      var firstOK = entries[0].isCorrect;
+      var anyOK = firstCorrectIdx >= 0;
+      var color = firstOK ? '#16a34a' : (anyOK ? '#d97706' : '#dc2626');
+      var label = firstOK ? '✓ İlk denemede doğru'
+                : anyOK  ? ('○ ' + (firstCorrectIdx+1) + '. denemede doğru')
+                :           '✗ Hiç doğru yapmadı';
+
+      var attemptRows = entries.map(function(e,i){
+        var bg = i%2===0 ? '#f9fafb' : '#fff';
+        return '<tr style="background:' + bg + '">'
+          + '<td style="padding:6px 10px;font-size:12px;color:#6b7280;">' + (i+1) + '. deneme — ' + (e.tsLocal||'') + '</td>'
+          + '<td style="padding:6px 10px;font-size:12px;">' + (e.chosen||'—') + '</td>'
+          + '<td style="padding:6px 10px;font-size:12px;font-weight:700;color:' + (e.isCorrect?'#16a34a':'#dc2626') + '">' + (e.isCorrect?'✓ Doğru':'✗ Yanlış') + '</td>'
+          + '</tr>';
+      }).join('');
+
+      qRows += '<div style="margin-bottom:12px;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;">'
+        + '<div style="padding:10px 14px;background:#f3f4f6;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;">'
+        + '<div><span style="font-size:10px;color:#9ca3af;font-weight:600;text-transform:uppercase;">' + (typeLabel[first.type]||first.type||'') + '</span>'
+        + '<div style="font-size:13px;font-weight:600;color:#1a1f36;margin-top:2px;">' + (first.question||'—') + '</div>'
+        + (first.correct ? '<div style="font-size:11px;color:#16a34a;margin-top:2px;">✓ Doğru cevap: ' + first.correct + '</div>' : '')
+        + '</div>'
+        + '<span style="font-size:12px;font-weight:700;color:' + color + ';white-space:nowrap;">' + label + '</span>'
+        + '</div>'
+        + '<table style="width:100%;border-collapse:collapse;">'
+        + '<thead><tr style="background:#1a2a5e;color:#fff;">'
+        + '<th style="padding:6px 10px;font-size:11px;text-align:left;">Deneme</th>'
+        + '<th style="padding:6px 10px;font-size:11px;text-align:left;">Verilen Cevap</th>'
+        + '<th style="padding:6px 10px;font-size:11px;text-align:left;">Sonuç</th>'
+        + '</tr></thead><tbody>' + attemptRows + '</tbody></table></div>';
+    });
+
+    topicSections += '<div style="margin-bottom:28px;">'
+      + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;">'
+      + '<h3 style="font-size:15px;font-weight:800;color:#1a2a5e;">' + tdata.name + '</h3>'
+      + '<div style="display:flex;gap:8px;align-items:center;">'
+      + '<span style="font-size:11px;color:#6b7280;">Hafta ' + tdata.week + '</span>'
+      + (mcqPct!==null ? '<span style="background:#1a2a5e;color:#fff;border-radius:20px;padding:2px 10px;font-size:11px;font-weight:700;">ÇSS: %' + mcqPct + '</span>' : '')
+      + '</div></div>'
+      + (qRows || '<p style="font-size:13px;color:#9ca3af;">Henüz kayıtlı hamle yok.</p>')
+      + '</div>';
+  });
+
+  if(!Object.keys(byTopic).length){
+    topicSections = '<div style="padding:40px;text-align:center;color:#9ca3af;font-size:14px;">Bu öğrenciye ait henüz log kaydı bulunmuyor.</div>';
+  }
+
+  var totalLogs = logs.length;
+  var firstOKCount = logs.filter(function(l){ return l.attempt===1 && l.isCorrect; }).length;
+  var firstTotalCount = logs.filter(function(l){ return l.attempt===1; }).length;
+  var firstPct = firstTotalCount ? Math.round(firstOKCount/firstTotalCount*100) : 0;
+
+  var logJSON = JSON.stringify(logs).replace(/<\/script>/gi, '<\\/script>');
+
+  var reportHTML = '<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8">'
+    + '<title>Rapor — ' + studentName + '</title>'
+    + '<style>body{font-family:Segoe UI,sans-serif;background:#f5f6fa;color:#1a1f36;margin:0;padding:0;}'
+    + '.page{max-width:900px;margin:0 auto;padding:32px 24px;}'
+    + '@media print{.no-print{display:none;}body{background:#fff;}}'
+    + '</style></head><body><div class="page">'
+    + '<div style="background:linear-gradient(135deg,#1a2a5e,#1e3a8a);border-radius:16px;padding:28px 32px;color:#fff;margin-bottom:24px;">'
+    + '<div style="font-size:11px;opacity:.7;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;">SHMYO Öğrenci Aktivite Raporu</div>'
+    + '<h1 style="font-size:24px;font-weight:800;margin-bottom:4px;">' + studentName + '</h1>'
+    + '<div style="font-size:13px;opacity:.8;">No: ' + studentNo + ' | ' + key + ' | ' + new Date().toLocaleString('tr-TR') + '</div>'
+    + '</div>'
+    + '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;">'
+    + '<div style="background:#fff;border:2px solid #d0d8ee;border-radius:12px;padding:16px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#1a2a5e;">' + totalLogs + '</div><div style="font-size:11px;color:#6b7280;margin-top:2px;">Toplam Hamle</div></div>'
+    + '<div style="background:#fff;border:2px solid #d0d8ee;border-radius:12px;padding:16px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#16a34a;">' + firstOKCount + '</div><div style="font-size:11px;color:#6b7280;margin-top:2px;">İlk Denemede Doğru</div></div>'
+    + '<div style="background:#fff;border:2px solid #d0d8ee;border-radius:12px;padding:16px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#f97316;">' + firstPct + '%</div><div style="font-size:11px;color:#6b7280;margin-top:2px;">İlk Deneme Başarısı</div></div>'
+    + '<div style="background:#fff;border:2px solid #d0d8ee;border-radius:12px;padding:16px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#1a2a5e;">' + Object.keys(byTopic).length + '</div><div style="font-size:11px;color:#6b7280;margin-top:2px;">Çalışılan Konu</div></div>'
+    + '</div>'
+    + '<div class="no-print" style="margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap;">'
+    + '<button onclick="window.print()" style="padding:10px 18px;background:#1a2a5e;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">🖨️ Yazdır / PDF</button>'
+    + '<button onclick="dlCSV()" style="padding:10px 18px;background:#f97316;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">⬇️ CSV İndir</button>'
+    + '</div>'
+    + '<div style="background:#fff;border:2px solid #d0d8ee;border-radius:16px;padding:24px;">'
+    + '<h2 style="font-size:16px;font-weight:800;color:#1a2a5e;margin-bottom:20px;padding-bottom:10px;border-bottom:2px solid #e5e7eb;">📋 Soru Bazlı Detay</h2>'
+    + topicSections
+    + '</div>'
+    + '<script>var LOGS=' + logJSON + ';'
+    + 'function dlCSV(){'
+    + 'var rows=[["Tarih","Konu","Hafta","Tür","Soru","Verilen Cevap","Doğru Cevap","Sonuç","Deneme No"]];'
+    + 'LOGS.forEach(function(l){'
+    + 'rows.push([(l.tsLocal||"").replace(/,/g," "),(l.topicName||"").replace(/,/g,";"),(l.week||""),(l.type||""),(l.question||"").replace(/,/g,";").replace(/\\n/g," "),(l.chosen||"").replace(/,/g,";"),(l.correct||"").replace(/,/g,";"),(l.isCorrect?"Doğru":"Yanlış"),(l.attempt||1)]);'
+    + '});'
+    + 'var csv="\\ufeff"+rows.map(function(r){return r.join(",");}).join("\\r\\n");'
+    + 'var a=document.createElement("a");'
+    + 'a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8;"}));'
+    + 'a.download="rapor_' + studentName.replace(/\s+/g,'_') + '_"+new Date().toISOString().slice(0,10)+".csv";'
+    + 'a.click();}'
+    + '<' + '/script>'
+    + '</div></body></html>';
+
+  var w = window.open('', '_blank');
+  if(w){ w.document.write(reportHTML); w.document.close(); }
+  else { showToast('Pop-up engelleyiciyi kapatın.','err'); }
+}
+
+async function loadAllReport(){
+  showToast('Tüm sınıf raporu hazırlanıyor…');
+  var key = getCourseKey();
+  var students = [];
+  if(db){
+    try{
+      var snap = await db.collection('courses/'+key+'/students').get();
+      for(var doc of snap.docs) students.push(Object.assign({id:doc.id}, doc.data()));
+    }catch(e){}
+  }
+  var rows = [['Öğrenci Adı','Öğrenci No','Konu','Hafta','ÇSS Doğru','ÇSS Toplam','ÇSS %','Boşluk D.','Eşleştirme','D/Y','Tarih']];
+  students.forEach(function(s){
+    var sc = s.scores||{};
+    Object.keys(sc).forEach(function(tid){
+      var v = sc[tid];
+      var topic = TOPICS.find(function(t){ return t.id===tid; });
+      rows.push([
+        s.name, s.studentNo,
+        topic?topic.title:tid, topic?topic.week:'',
+        v.mcq?v.mcq.c:0, v.mcq?v.mcq.t:0,
+        v.mcq&&v.mcq.t ? Math.round(v.mcq.c/v.mcq.t*100)+'%':'—',
+        v.fill&&v.fill.t ? v.fill.c+'/'+v.fill.t : '—',
+        v.match&&v.match.t ? v.match.c+'/'+v.match.t : '—',
+        v.tf&&v.tf.t ? v.tf.c+'/'+v.tf.t : '—',
+        v.mcq?v.mcq.d||'—':'—'
+      ]);
+    });
+  });
+  var csv = '\ufeff' + rows.map(function(r){ return r.join(','); }).join('\r\n');
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+  a.download = 'sinif_raporu_'+key+'_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+  showToast('CSV indirildi!','ok');
+}
+
+
+
+// ════════════════════════════════════════════
+// FLASH KARTLAR
+// ════════════════════════════════════════════
+var _flashIdx = 0;
+var _flashFlipped = false;
+var _flashSeen = [];
+
+// ════════════════════════════════════════════
+// FLASH KARTLAR — IZGARA GÖRÜNÜMÜ
+// ════════════════════════════════════════════
+function renderFlashCards(){
+  var topic = TOPICS.find(function(t){ return t.id===S.currentTopic; });
+  var cards = (FLASH_CARDS[S.currentTopic]||[]).slice();
+  if(!cards.length){ showToast('Flash kart eklenmedi.','err'); startTopicMenu(S.currentTopic); return; }
+
+  var cardsHtml = cards.map(function(card, i){
+    return '<div class="fc-item" id="fc-'+i+'" onclick="flipFCard('+i+')">'
+      + '<div class="fc-inner" id="fci-'+i+'">'
+      + '<div class="fc-face fc-front"><div class="fc-label">SORU</div><div class="fc-text">'+card.q+'</div><div class="fc-tap">👆 Cevap için tıkla</div></div>'
+      + '<div class="fc-face fc-back"><div class="fc-label">CEVAP</div><div class="fc-text">'+card.a+'</div></div>'
+      + '</div></div>';
+  }).join('');
+
+  document.getElementById('mainContent').innerHTML =
+    '<div class="ex-header">'
+    + '<div><div class="ex-topic-badge">'+topic.icon+' Hafta '+topic.week+'</div>'
+    + '<div class="ex-title">'+topic.title+' — Flash Kartlar</div>'
+    + '<div class="ex-meta">'+cards.length+' kart — Tıklayarak çevir</div></div>'
+    + '<button class="btn-sec btn-sm" onclick="startTopicMenu(\''+S.currentTopic+'\')">← Geri</button>'
+    + '</div>'
+    + '<div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">'
+    + '<button class="btn-sec btn-sm" onclick="flipAllFCards(false)">📋 Hepsini Kapat</button>'
+    + '<button class="btn-accent btn-sm" onclick="flipAllFCards(true)">👁️ Hepsini Aç</button>'
+    + '</div>'
+    + '<div class="fc-grid">'+cardsHtml+'</div>';
+
+  if(!S.scores[S.currentTopic]) S.scores[S.currentTopic]={};
+  S.scores[S.currentTopic].flash={c:cards.length,t:cards.length,d:new Date().toLocaleDateString('tr-TR')};
+  persistStudentData();
+}
+
+var _fcFlipped = {};
+function flipFCard(i){
+  _fcFlipped[i] = !_fcFlipped[i];
+  var el = document.getElementById('fci-'+i);
+  if(el){ el.classList.toggle('flipped', !!_fcFlipped[i]); }
+}
+function flipAllFCards(open){
+  _fcFlipped = {};
+  document.querySelectorAll('.fc-inner').forEach(function(el,i){
+    _fcFlipped[i] = open;
+    el.classList.toggle('flipped', open);
+  });
+}
+
+// ════════════════════════════════════════════
+// YENİ SORU TİPLERİ VERİSİ
+// ════════════════════════════════════════════
+var CREATIVE_Q = {
+  // Hedefe sürükle (drag to category)
+  dragdrop: {
+    units:[
+      { prompt:'Aşağıdaki birimleri doğru kategorilere sürükleyin:',
+        categories:['Temel Birim','Türetilmiş Birim','Radyasyon Birimi'],
+        items:[
+          {label:'Metre (m)',    cat:0}, {label:'Kilogram (kg)', cat:0},
+          {label:'Saniye (s)',   cat:0}, {label:'Newton (N)',    cat:1},
+          {label:'Hız (m/s)',    cat:1}, {label:'Gray (Gy)',     cat:2},
+          {label:'Sievert (Sv)',cat:2}, {label:'Joule (J)',      cat:1},
+        ]
+      }
+    ],
+    force:[
+      { prompt:"Newton yasalarını doğru şıklara sürükleyin:",
+        categories:["1. Yasa","2. Yasa","3. Yasa"],
+        items:[
+          {label:"F = m·a",        cat:1},{label:"Eylemsizlik",  cat:0},
+          {label:"Etki-Tepki",     cat:2},{label:"Net F=0 → v sabit",cat:0},
+          {label:"a∝F, a∝1/m",    cat:1},{label:"Roket iticisi", cat:2},
+        ]
+      }
+    ],
+    radiation:[
+      { prompt:"Radyasyon türlerini özelliklerine göre sürükleyin:",
+        categories:["En Düşük Nüfuz","Orta Nüfuz","En Yüksek Nüfuz"],
+        items:[
+          {label:"Alfa (α)",  cat:0},{label:"Beta (β)",  cat:1},
+          {label:"Gamma (γ)", cat:2},{label:"X-ışını",   cat:2},
+          {label:"Nötron",    cat:2},{label:"Kağıtla durur",cat:0},
+        ]
+      }
+    ],
+    interaction:[
+      { prompt:"X-ışını etkileşimlerini enerji aralıklarına göre sürükleyin:",
+        categories:["<30 keV","30–150 keV",">1 MeV"],
+        items:[
+          {label:"Fotoelektrik etki baskın",  cat:0},
+          {label:"Compton saçılması baskın",  cat:1},
+          {label:"Çift oluşumu gerçekleşir",  cat:2},
+          {label:"Tıbbi X-ışını aralığı",     cat:1},
+          {label:"PET gama enerjisi (0.511 MeV×2)",cat:2},
+        ]
+      }
+    ],
+  },
+
+  // Hangisi dışarıda? (odd one out)
+  oddone:[
+    {q:"Hangisi SI'nın TEMEL birimidir?", opts:["Metre","Kilogram","Newton","Saniye"], ans:2, exp:"Newton türetilmiş birimdir (kg·m/s²). Diğerleri SI'nın 7 temel biriminden."},
+    {q:"Hangisi vektörel büyüklük DEĞİLDİR?", opts:["Kuvvet","Hız","İvme","Kütle"], ans:3, exp:"Kütle skalerdir; yalnızca büyüklüğü var, yönü yok."},
+    {q:"Hangisi X-ışını etkileşim mekanizması DEĞİLDİR?", opts:["Fotoelektrik etki","Compton saçılması","Çift oluşumu","Lorentz saçılması"], ans:3, exp:"Lorentz saçılması diye bir X-ışını etkileşimi yoktur. Diğer üçü gerçek mekanizmalardır."},
+    {q:"Hangisi iyonlaştırıcı radyasyon DEĞİLDİR?", opts:["X-ışını","Gamma","Alfa","Kızılötesi (IR)"], ans:3, exp:"Kızılötesi ışınları iyonlaştırıcı değildir; enerji çok düşük."},
+    {q:"Hangisi elektrik devresi yasası DEĞİLDİR?", opts:["Ohm Yasası","KCL","KVL","Lenz Yasası"], ans:3, exp:"Lenz Yasası elektromanyetik indüksiyonla ilgilidir; devre analizi yasası değil."},
+    {q:"Hangisi momentum korunumunun uygulaması DEĞİLDİR?", opts:["Roket iticisi","Hava yastığı","Top çarpışması","Transformatör"], ans:3, exp:"Transformatör elektromanyetik indüksiyonla çalışır; momentum korumuyla ilgisi yok."},
+    {q:"Hangi görüntüleme yöntemi iyonize radyasyon kullanmaz?", opts:["X-ışını","BT (CT)","MRI","PET"], ans:2, exp:"MRI manyetik alan ve radyo dalgası kullanır; iyonize radyasyon içermez."},
+    {q:"Hangisi denge koşulu DEĞİLDİR?", opts:["ΣF = 0","Στ = 0","Σp = 0","Statik durma"], ans:2, exp:"ΣF=0 ve Στ=0 denge koşullarıdır. Σp=0 denge için gerekli değil; momentumun korunması farklı bir kavramdır."},
+  ],
+
+  // Hız turu (speed round - timed MCQ)
+  speed:{
+    units:[
+      {q:"Gray birimi?",          opts:["J/kg","N/m","W/s","C/V"], ans:0},
+      {q:"Nano = ?",              opts:["10⁻⁶","10⁻⁹","10⁻³","10⁻¹²"], ans:1},
+      {q:"Sievert neyi ölçer?",   opts:["Aktivite","Soğurulan doz","Ekvivalent doz","Güç"], ans:2},
+      {q:"SI kütle birimi?",      opts:["Gram","Newton","Kilogram","Ton"], ans:2},
+      {q:"1 MeV = ? Joule",      opts:["1,6×10⁻¹⁹","1,6×10⁻¹³","1,6×10⁻⁷","9×10⁹"], ans:1},
+      {q:"Becquerel neyi ölçer?", opts:["Doz","Aktivite","Alan","Güç"], ans:1},
+    ],
+    force:[
+      {q:"F = ?",             opts:["m+a","m/a","m·a","m²·a"], ans:2},
+      {q:"Ağırlık birimi?",   opts:["kg","N","J","Pa"], ans:1},
+      {q:"μs vs μk?",         opts:["μs<μk","μs>μk","Eşit","Bağımsız"], ans:1},
+      {q:"Newton 3. yasa?",   opts:["F=ma","Eylemsizlik","Etki-tepki","Enerji korunumu"], ans:2},
+      {q:"g ≈ ?",             opts:["10 m/s","10 m/s²","9 N/kg","10 N/m"], ans:1},
+    ],
+    motion:[
+      {q:"h=½gt², t=2, g=10 → h=?", opts:["10 m","20 m","40 m","5 m"], ans:1},
+      {q:"v-t grafiği eğimi?",       opts:["Yol","Hız","İvme","Kuvvet"], ans:2},
+      {q:"Max menzil açısı?",        opts:["30°","45°","60°","90°"], ans:1},
+      {q:"Merkezcil ivme?",          opts:["v²r","v/r","v²/r","vr²"], ans:2},
+      {q:"v=v₀+at; v₀=0,a=5,t=4",   opts:["9 m/s","20 m/s","1,25 m/s","5 m/s"], ans:1},
+    ],
+    radiation:[
+      {q:"En yüksek nüfuz?",    opts:["Alfa","Beta","Gama","Nötron"], ans:2},
+      {q:"Alfa = ?",            opts:["Elektron","He-4","Foton","Proton"], ans:1},
+      {q:"PET → hangi radyasyon?", opts:["Alpha","Beta+","Gama","X"], ans:1},
+      {q:"Gama yüklü mü?",      opts:["Evet +","Evet -","Hayır","Bazen"], ans:2},
+      {q:"β⁻ nedir?",           opts:["Proton","Pozitron","Elektron","Nötron"], ans:2},
+    ],
+    interaction:[
+      {q:"30-150 keV'de baskın?",  opts:["Fotoelektrik","Compton","Çift oluşumu","Rayleigh"], ans:1},
+      {q:"HVL = ?",               opts:["0,5/μ","0,693/μ","1/μ","2/μ"], ans:1},
+      {q:"Mesafe 2x → yoğunluk?", opts:["½","¼","⅛","2x"], ans:1},
+      {q:"Çift oluşumu min. E?",   opts:["0,511 MeV","1,022 MeV","2 MeV","0,1 MeV"], ans:1},
+      {q:"Fotoelektrik → Z ile?",  opts:["Z ile düşer","Z³⁻⁴ ile artar","Bağımsız","Z² ile azalır"], ans:1},
+    ],
+  },
+};
+
+// ════════════════════════════════════════════
+// HEDEFE SÜRÜKLE (DRAG & DROP)
+// ════════════════════════════════════════════
+var _ddState = { placed:{}, exercise:null };
+
+function renderDragDrop(){
+  var tid = S.currentTopic;
+  var pool = CREATIVE_Q.dragdrop[tid];
+  if(!pool||!pool.length){ showToast('Bu konu için sürükleme eklenmedi.','err'); startTopicMenu(tid); return; }
+  var ex = pool[S.currentQ % pool.length];
+  _ddState = { placed:{}, exercise:ex };
+
+  var items = ex.items.slice().sort(function(){ return Math.random()-.5; });
+
+  var catHtml = ex.categories.map(function(cat,ci){
+    return '<div class="dd-cat" id="ddcat-'+ci+'" '
+      +'ondragover="event.preventDefault();this.classList.add(\'dd-over\')" '
+      +'ondragleave="this.classList.remove(\'dd-over\')" '
+      +'ondrop="ddDrop(event,'+ci+')">'
+      +'<div class="dd-cat-title">'+cat+'</div>'
+      +'<div class="dd-cat-body" id="ddbody-'+ci+'"></div>'
+      +'</div>';
+  }).join('');
+
+  var itemsHtml = items.map(function(item,ii){
+    return '<div class="dd-chip" id="dditem-'+ii+'" draggable="true" '
+      +'data-cat="'+item.cat+'" '
+      +'ondragstart="ddDragStart(event,'+ii+')" '
+      +'onclick="ddClick('+ii+')">'
+      +item.label+'</div>';
+  }).join('');
+
+  document.getElementById('mainContent').innerHTML =
+    '<div class="ex-header"><div>'
+    +'<div class="ex-topic-badge">🎯 Hedefe Sürükle</div>'
+    +'<div class="ex-title">'+ex.prompt+'</div></div>'
+    +'<button class="btn-sec btn-sm" onclick="startTopicMenu(\''+tid+'\')">← Geri</button>'
+    +'</div>'
+    +'<div class="dd-pool" id="ddpool">'+itemsHtml+'</div>'
+    +'<div class="dd-cats">'+catHtml+'</div>'
+    +'<div id="ddFeedback" style="margin-top:12px;"></div>'
+    +'<div class="ex-controls" style="margin-top:12px;">'
+    +'<button class="btn-accent btn-sm" onclick="ddCheck()">✓ Kontrol Et</button>'
+    +'<button class="btn-sec btn-sm" onclick="ddReset()">↺ Sıfırla</button>'
+    +'</div>';
+}
+
+var _ddSelected = null;
+function ddDragStart(e,idx){ e.dataTransfer.setData('ddidx',idx); }
+function ddClick(idx){
+  // Mobile friendly: click to select then click category
+  _ddSelected = idx;
+  document.querySelectorAll('.dd-chip').forEach(function(c){ c.classList.remove('dd-sel'); });
+  var el = document.getElementById('dditem-'+idx);
+  if(el) el.classList.add('dd-sel');
+}
+function ddDrop(e,catIdx){
+  e.preventDefault();
+  this.classList.remove('dd-over');
+  var idx = parseInt(e.dataTransfer.getData('ddidx'));
+  ddPlace(idx,catIdx);
+}
+function ddCatClick(catIdx){
+  if(_ddSelected===null) return;
+  ddPlace(_ddSelected,catIdx);
+  _ddSelected=null;
+}
+
+function ddPlace(itemIdx,catIdx){
+  _ddState.placed[itemIdx]=catIdx;
+  var chip = document.getElementById('dditem-'+itemIdx);
+  var body = document.getElementById('ddbody-'+catIdx);
+  if(chip&&body){
+    chip.classList.remove('dd-sel');
+    body.appendChild(chip);
+  }
+}
+
+function ddReset(){
+  var pool = document.getElementById('ddpool');
+  document.querySelectorAll('.dd-chip').forEach(function(c){ pool.appendChild(c); c.classList.remove('dd-correct','dd-wrong','dd-sel'); });
+  _ddState.placed={};
+  document.getElementById('ddFeedback').innerHTML='';
+}
+
+function ddCheck(){
+  var ex = _ddState.exercise;
+  var items = ex.items;
+  var correct=0;
+  Object.keys(_ddState.placed).forEach(function(idx){
+    var item = items[parseInt(idx)];
+    // find original item by matching label
+    var chip=document.getElementById('dditem-'+idx);
+    var placedCat=_ddState.placed[idx];
+    var origCat=parseInt(chip.getAttribute('data-cat'));
+    if(placedCat===origCat){
+      correct++;
+      if(chip)chip.classList.add('dd-correct');
+    } else {
+      if(chip)chip.classList.add('dd-wrong');
+    }
+  });
+  var total = ex.items.length;
+  var placed = Object.keys(_ddState.placed).length;
+  var fb=document.getElementById('ddFeedback');
+  var pct=total?Math.round(correct/total*100):0;
+  fb.innerHTML='<div style="padding:12px 16px;background:'+(pct>=80?'var(--green2)':'var(--red2)')+';border-radius:10px;font-size:14px;font-weight:700;color:'+(pct>=80?'var(--green)':'var(--red)')+';">'
+    +(placed<total?('⚠️ '+(total-placed)+' kart yerleştirilmedi! '):'')
+    +correct+'/'+total+' doğru ('+pct+'%) '+(pct===100?'🎉 Mükemmel!':'')
+    +'</div>';
+  if(!S.scores[S.currentTopic]) S.scores[S.currentTopic]={};
+  if(!S.scores[S.currentTopic].drag) S.scores[S.currentTopic].drag={c:0,t:0};
+  S.scores[S.currentTopic].drag.c+=correct;
+  S.scores[S.currentTopic].drag.t+=total;
+  persistStudentData();
+}
+
+// ════════════════════════════════════════════
+// HANGİSİ DIŞARIDA? (ODD ONE OUT)
+// ════════════════════════════════════════════
+var _ooAnswered=false;
+function renderOddOne(){
+  _ooAnswered=false;
+  var items=CREATIVE_Q.oddone;
+  var idx=S.currentQ%items.length;
+  var q=items[idx];
+  var opts=q.opts.map(function(o,i){
+    return '<div class="oo-opt" id="oo-'+i+'" onclick="ooSelect('+i+')">'
+      +'<span class="oo-emoji">'+['🟦','🟥','🟩','🟨'][i]+'</span> '+o+'</div>';
+  }).join('');
+  document.getElementById('mainContent').innerHTML=
+    '<div class="ex-header"><div>'
+    +'<div class="ex-topic-badge">🔍 Hangisi Dışarıda?</div>'
+    +'<div class="ex-title">Gruba uymayan seçeneği bulun!</div>'
+    +'<div class="ex-meta">Soru '+(idx+1)+'/'+items.length+'</div></div>'
+    +'<button class="btn-sec btn-sm" onclick="startTopicMenu(\''+S.currentTopic+'\')">← Geri</button>'
+    +'</div>'
+    +'<div class="q-card">'
+    +'<div class="q-number">🔍 Hangisi Dışarıda?</div>'
+    +'<div class="q-text" style="font-size:16px;font-weight:700;">'+q.q+'</div>'
+    +'<div class="oo-grid">'+opts+'</div>'
+    +'<div class="exp-box" id="ooExp"><div class="exp-label">📚 Açıklama</div><div id="ooExpText"></div></div>'
+    +'</div>'
+    +'<div class="ex-controls">'
+    +'<button class="btn-sec btn-sm" id="ooNext" onclick="ooNext()" disabled>Sonraki →</button>'
+    +'<span class="q-counter">'+(idx+1)+'/'+items.length+'</span>'
+    +'</div>';
+}
+
+function ooSelect(i){
+  if(_ooAnswered)return; _ooAnswered=true;
+  var items=CREATIVE_Q.oddone;
+  var q=items[S.currentQ%items.length];
+  var correct=i===q.ans;
+  document.querySelectorAll('.oo-opt').forEach(function(el,j){
+    if(j===q.ans)el.classList.add('oo-correct');
+    else if(j===i&&!correct)el.classList.add('oo-wrong');
+    el.style.pointerEvents='none';
+  });
+  document.getElementById('ooExpText').textContent=q.exp;
+  document.getElementById('ooExp').classList.add('visible');
+  document.getElementById('ooNext').disabled=false;
+  showToast(correct?'Doğru! 🎉':'Yanlış!',correct?'ok':'err');
+  if(!S.scores[S.currentTopic]) S.scores[S.currentTopic]={};
+  if(!S.scores[S.currentTopic].odd) S.scores[S.currentTopic].odd={c:0,t:0};
+  S.scores[S.currentTopic].odd.c+=(correct?1:0);
+  S.scores[S.currentTopic].odd.t+=1;
+  persistStudentData();
+}
+
+function ooNext(){
+  S.currentQ++;
+  var total=CREATIVE_Q.oddone.length;
+  if(S.currentQ>=total){ showScoreScreen(S.scores[S.currentTopic]?.odd?.c||0,total,'odd'); }
+  else renderOddOne();
+}
+
+// ════════════════════════════════════════════
+// HIZ TURU (SPEED ROUND — 10 sn süre)
+// ════════════════════════════════════════════
+var _speedTimer=null, _speedStart=0, _speedAnswered=false;
+
+function renderSpeedRound(){
+  var tid=S.currentTopic;
+  // Use any topic's speed pool, fall back to shared oddone
+  var pool=CREATIVE_Q.speed[tid]||CREATIVE_Q.speed['units'];
+  var q=pool[S.currentQ%pool.length];
+  _speedAnswered=false;
+
+  var opts=q.opts.map(function(o,i){
+    return '<div class="sp-opt" id="spopt-'+i+'" onclick="speedAnswer('+i+')">'
+      +'<span class="sp-letter">'+['A','B','C','D'][i]+'</span>'+o+'</div>';
+  }).join('');
+
+  document.getElementById('mainContent').innerHTML=
+    '<div class="ex-header"><div>'
+    +'<div class="ex-topic-badge">⚡ Hız Turu</div>'
+    +'<div class="ex-title">10 saniyede cevapla!</div>'
+    +'<div class="ex-meta">Soru '+(S.currentQ%pool.length+1)+'/'+pool.length+'</div></div>'
+    +'<button class="btn-sec btn-sm" onclick="clearInterval(_speedTimer);startTopicMenu(\''+tid+'\')">← Geri</button>'
+    +'</div>'
+    +'<div class="sp-timer-wrap"><div class="sp-timer-bar" id="spbar"></div><span id="spTime" style="font-size:13px;font-weight:700;color:var(--navy);">10</span></div>'
+    +'<div class="q-card">'
+    +'<div class="q-number">⚡ HIZLI SORU</div>'
+    +'<div class="q-text" style="font-size:17px;font-weight:700;">'+q.q+'</div>'
+    +'<div class="sp-opts">'+opts+'</div>'
+    +'<div class="exp-box" id="spExp"><div class="exp-label">📚 Açıklama</div><div id="spExpText"></div></div>'
+    +'</div>'
+    +'<div class="ex-controls">'
+    +'<button class="btn-accent btn-sm" id="spNext" onclick="speedNext()" disabled>Sonraki ⚡</button>'
+    +'<span class="q-counter">'+(S.currentQ%pool.length+1)+'/'+pool.length+'</span>'
+    +'</div>';
+
+  // Start countdown
+  var timeLeft=10;
+  var bar=document.getElementById('spbar');
+  var timeEl=document.getElementById('spTime');
+  _speedTimer=setInterval(function(){
+    timeLeft--;
+    if(bar) bar.style.width=((timeLeft/10)*100)+'%';
+    if(timeEl) timeEl.textContent=timeLeft;
+    if(timeLeft<=3&&bar) bar.style.background='var(--red)';
+    if(timeLeft<=0){
+      clearInterval(_speedTimer);
+      if(!_speedAnswered) timeUp(q);
+    }
+  },1000);
+  if(bar) bar.style.width='100%';
+  _speedStart=Date.now();
+}
+
+function timeUp(q){
+  _speedAnswered=true;
+  document.querySelectorAll('.sp-opt').forEach(function(el,i){
+    el.style.pointerEvents='none';
+    if(i===q.ans) el.classList.add('sp-correct');
+  });
+  document.getElementById('spExpText').textContent='Süre doldu! Doğru cevap: '+q.opts[q.ans];
+  document.getElementById('spExp').classList.add('visible');
+  document.getElementById('spNext').disabled=false;
+  showToast('⏱️ Süre doldu!','err');
+}
+
+function speedAnswer(i){
+  if(_speedAnswered)return;
+  clearInterval(_speedTimer);
+  _speedAnswered=true;
+  var tid=S.currentTopic;
+  var pool=CREATIVE_Q.speed[tid]||CREATIVE_Q.speed['units'];
+  var q=pool[S.currentQ%pool.length];
+  var correct=i===q.ans;
+  var elapsed=Math.round((Date.now()-_speedStart)/100)/10;
+  document.querySelectorAll('.sp-opt').forEach(function(el,j){
+    el.style.pointerEvents='none';
+    if(j===q.ans)el.classList.add('sp-correct');
+    else if(j===i&&!correct)el.classList.add('sp-wrong');
+  });
+  document.getElementById('spExpText').textContent=(correct?'✓ Doğru! ':'✗ Yanlış! Doğru: '+q.opts[q.ans]+'. ')+' ('+elapsed+' sn)';
+  document.getElementById('spExp').classList.add('visible');
+  document.getElementById('spNext').disabled=false;
+  showToast(correct?'⚡ Doğru! ('+elapsed+'s)':'Yanlış!',correct?'ok':'err');
+  if(!S.scores[S.currentTopic]) S.scores[S.currentTopic]={};
+  if(!S.scores[S.currentTopic].speed) S.scores[S.currentTopic].speed={c:0,t:0};
+  S.scores[S.currentTopic].speed.c+=(correct?1:0);
+  S.scores[S.currentTopic].speed.t+=1;
+  persistStudentData();
+}
+
+function speedNext(){
+  var tid=S.currentTopic;
+  var pool=CREATIVE_Q.speed[tid]||CREATIVE_Q.speed['units'];
+  S.currentQ++;
+  if(S.currentQ>=pool.length){
+    showScoreScreen(S.scores[tid]?.speed?.c||0,pool.length,'speed');
+  } else renderSpeedRound();
+}
+
+
+
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className=`toast show ${type}`;
+  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),3000);
+}
+</script>
+
+
+<!-- ══ QR MODAL ══ -->
+<div id="qrModal" style="position:fixed;bottom:20px;right:20px;z-index:999;background:#fff;border:2px solid #1a2a5e;border-radius:20px;padding:20px 22px;box-shadow:0 8px 32px rgba(26,42,94,.25);text-align:center;max-width:200px;animation:slideInQR .4s cubic-bezier(.34,1.56,.64,1);">
+  <div style="font-size:11px;font-weight:800;color:#1a2a5e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">&#128241; QR ile Aç</div>
+  <div id="qrCanvas" style="width:156px;height:156px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;"></div>
+  <div style="font-size:10px;color:#6b7280;line-height:1.5;">Kameranızı tutun<br>Direkt derse girin</div>
+  <button onclick="document.getElementById('qrModal').style.display='none'" style="margin-top:10px;background:none;border:1px solid #d0d8ee;border-radius:6px;padding:4px 10px;font-size:10px;color:#9ca3af;cursor:pointer;">&#10005; Kapat</button>
+</div>
+<style>
+@keyframes slideInQR{from{transform:translateY(20px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+(function(){
+  function initQR(){
+    var el=document.getElementById('qrCanvas');
+    if(!el) return;
+    var url=window.location.href;
+    try{
+      new QRCode(el,{text:url,width:156,height:156,colorDark:'#1a2a5e',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
+    }catch(e){
+      el.innerHTML='<div style="font-size:10px;color:#9ca3af;padding:20px;">QR yüklenemedi</div>';
+    }
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',initQR);}
+  else{setTimeout(initQR,500);}
+})();
+</script></body>
+</html>
